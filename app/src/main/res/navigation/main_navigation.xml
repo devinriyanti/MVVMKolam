@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/itemRumah">
+
+    <fragment
+        android:id="@+id/itemRumah"
+        android:name="id.web.devin.mvvmkolam.view.HomeListFragment"
+        android:label="fragment_home_list"
+        tools:layout="@layout/fragment_home_list" >
+        <action
+            android:id="@+id/actionDetailFragment"
+            app:destination="@id/detailKolamFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/itemDataDiri"
+        android:name="id.web.devin.mvvmkolam.view.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/itemCari"
+        android:name="id.web.devin.mvvmkolam.view.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/detailKolamFragment"
+        android:name="id.web.devin.mvvmkolam.view.KolamDetailFragment"
+        android:label="fragment_kolam_detail"
+        tools:layout="@layout/fragment_kolam_detail" >
+        <argument
+            android:name="kolamID"
+            app:argType="string"
+            android:defaultValue='""' />
+        <action
+            android:id="@+id/actionitemProduk"
+            app:destination="@id/tabProduk" />
+    </fragment>
+    <fragment
+        android:id="@+id/tabProduk"
+        android:name="id.web.devin.mvvmkolam.view.ProductListFragment"
+        android:label="fragment_product_list"
+        tools:layout="@layout/fragment_product_list" >
+        <action
+            android:id="@+id/actionProductDetailFragment"
+            app:destination="@id/productDetailFragment" />
+        <argument
+            android:name="kolamID"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
+    <fragment
+        android:id="@+id/tabPelatih"
+        android:name="id.web.devin.mvvmkolam.view.PelatihListFragment"
+        android:label="fragment_pelatih_list"
+        tools:layout="@layout/fragment_pelatih_list" >
+        <action
+            android:id="@+id/actionPelatihDetailFragment"
+            app:destination="@id/pelatihDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/pelatihDetailFragment"
+        android:name="id.web.devin.mvvmkolam.view.PelatihDetailFragment"
+        android:label="fragment_pelatih_detail"
+        tools:layout="@layout/fragment_pelatih_detail" />
+    <fragment
+        android:id="@+id/productDetailFragment"
+        android:name="id.web.devin.mvvmkolam.view.ProductDetailFragment"
+        android:label="fragment_product_detail"
+        tools:layout="@layout/fragment_product_detail" >
+        <argument
+            android:name="kolamID"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
+    <fragment
+        android:id="@+id/tabTiket"
+        android:name="id.web.devin.mvvmkolam.view.TiketListFragment"
+        android:label="fragment_tiket_list"
+        tools:layout="@layout/fragment_tiket_list" />
+</navigation>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/detailKolamFragment"
+        android:icon="@drawable/ic_baseline_confirmation_number_24"
+        android:title="Tiket"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/tabProduk"
+        android:icon="@drawable/ic_baseline_style_24"
+        android:title="Produk"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/tabPelatih"
+        android:icon="@drawable/ic_baseline_assignment_ind_24"
+        android:title="Pelatih"
+        app:showAsAction="always" />
+</menu>
