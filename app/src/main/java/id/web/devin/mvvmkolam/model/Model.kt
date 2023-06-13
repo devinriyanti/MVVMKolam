@@ -10,7 +10,9 @@ data class Pelatih(
     val kontak:String?,
     @SerializedName("mulai_karir")
     val tglKarir:String?,
-    val deskripsi:String?
+    val deskripsi:String?,
+    @SerializedName("gambar")
+    val gambarUrl: String?
 )
 
 data class Produk(

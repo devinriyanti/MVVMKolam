@@ -34,6 +34,7 @@ class KolamListAdapter(val kolamList:ArrayList<Kolam>):RecyclerView.Adapter<Kola
             imageKolam.loadImage(kolam.gambarUrl.toString(), progressBar)
 
             cardListKolam.setOnClickListener {
+                GlobalData.kolamID = kolam.id.toString()
                 val action = HomeListFragmentDirections.actionDetailFragment(kolam.id.toString())
 //            Log.d("Show",kolamList[position].id.toString())
                 Navigation.findNavController(it).navigate(action)

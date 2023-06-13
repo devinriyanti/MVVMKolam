@@ -28,6 +28,7 @@ class KolamDetailFragment : Fragment() {
     private lateinit var b: FragmentKolamDetailBinding
     private lateinit var navController: NavController
     private val tiketListAdapter = TiketListAdapter(arrayListOf())
+    private var kolamID:String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,16 +59,14 @@ class KolamDetailFragment : Fragment() {
         }
 
         if(arguments != null){
-            val kolamID = KolamDetailFragmentArgs.fromBundle(requireArguments()).kolamID
+            kolamID = KolamDetailFragmentArgs.fromBundle(requireArguments()).kolamID
             viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
 //            Log.d("idkolam",kolamID)
-            viewModel.fetchData(kolamID)
-
-//            b.recViewTiket.layoutManager = LinearLayoutManager(context)
-//            b.recViewTiket.adapter = tiketListAdapter
+            viewModel.fetchData(kolamID!!)
 
             observeModel()
             navController = Navigation.findNavController(requireParentFragment().requireView())
+
         }
     }
 

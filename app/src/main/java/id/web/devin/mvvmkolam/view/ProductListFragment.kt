@@ -34,22 +34,23 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(arguments != null){
-            val kolamID = ProductListFragmentArgs.fromBundle(requireArguments()).kolamID
-            Log.d("kolam",kolamID)
-            viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
-            viewModel.fetchData(kolamID)
+//        if(arguments != null){
+//            val kolamID = ProductListFragmentArgs.fromBundle(requireArguments()).kolamID
+        val kolamID = GlobalData.kolamID
+        Log.d("kolamProduk", kolamID)
+        viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
+        viewModel.fetchData(kolamID)
 
-            b.recViewProduct.layoutManager = GridLayoutManager(context,2)
-            b.recViewProduct.adapter = productListAdapter
+        b.recViewProduct.layoutManager = GridLayoutManager(context, 2)
+        b.recViewProduct.adapter = productListAdapter
 
-            b.refreshLayoutProduct.setOnRefreshListener {
-                b.recViewProduct.visibility = View.GONE
-                viewModel.fetchData(kolamID)
-                b.refreshLayoutProduct.isRefreshing = false
-            }
-            observeViewModel()
-        }
+//        b.refreshLayoutProduct.setOnRefreshListener {
+//            b.recViewProduct.visibility = View.GONE
+//            viewModel.fetchData(kolamID)
+//            b.refreshLayoutProduct.isRefreshing = false
+//        }
+        observeViewModel()
+//    }
     }
 
     private fun observeViewModel() {

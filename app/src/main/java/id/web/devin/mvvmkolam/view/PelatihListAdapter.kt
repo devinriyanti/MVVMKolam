@@ -1,10 +1,12 @@
 package id.web.devin.mvvmkolam.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.PelatihListItemBinding
 import id.web.devin.mvvmkolam.model.Pelatih
+import id.web.devin.mvvmkolam.util.loadImage
 import java.util.Calendar
 import java.util.Date
 
@@ -47,6 +49,8 @@ class PelatihListAdapter(val pelatihList:ArrayList<Pelatih>):RecyclerView.Adapte
         with(holder.b){
             txtNamaPelatih.text = pelatih.nama
             txtTahunPengalaman.text = pelatih.tglKarir
+            Log.d("url",pelatih.gambarUrl.toString())
+            imageViewPelatih.loadImage(pelatih.gambarUrl.toString(), progressBarPelatih)
         }
     }
 }

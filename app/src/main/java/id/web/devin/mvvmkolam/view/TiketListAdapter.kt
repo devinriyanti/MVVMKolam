@@ -33,8 +33,6 @@ class TiketListAdapter(val tiketList:ArrayList<Tiket>):RecyclerView.Adapter<Tike
                 imageView.loadImage(tiket.gambarUrl.toString(), progressBarTiketCard)
                 btnBeli.setOnClickListener {
                     val tiketID = tiket.idproduk
-//                val action =
-//                Navigation.findNavController(it).navigate(action)
                 }
             }
         }else{
