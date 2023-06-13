@@ -15,7 +15,9 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.FragmentKolamDetailBinding
 import id.web.devin.mvvmkolam.util.loadImage
@@ -26,8 +28,6 @@ class KolamDetailFragment : Fragment() {
     private lateinit var b: FragmentKolamDetailBinding
     private lateinit var navController: NavController
     private val tiketListAdapter = TiketListAdapter(arrayListOf())
-    private lateinit var viewPager: ViewPager
-    private lateinit var tabLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,14 +35,27 @@ class KolamDetailFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         b = FragmentKolamDetailBinding.inflate(layoutInflater)
-        val adapter = ViewPagerAdapter(childFragmentManager)
-        b.viewPagerTab.adapter = adapter
-        b.tabLayout.setupWithViewPager(b.viewPagerTab)
+
         return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val viewPager = b.viewPagerTab
+        val tabLayout = b.tabLayout
+
+        //Setup ViewPager
+        val adapter = MyPagerAdapter(childFragmentManager, lifecycle)
+        viewPager.adapter = adapter
+
+        TabLayoutMediator(tabLayout, viewPager){tab, position->
+            when (position) {
+                0 -> tab.text = "Tiket"
+                1 -> tab.text = "Produk"
+                2 -> tab.text = "Pelatih"
+            }
+        }
 
         if(arguments != null){
             val kolamID = KolamDetailFragmentArgs.fromBundle(requireArguments()).kolamID

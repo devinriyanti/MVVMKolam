@@ -12,7 +12,6 @@ import id.web.devin.mvvmkolam.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var b: ActivityMainBinding
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +20,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(b.root)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.hostMainFragment) as NavHostFragment
         val navController = navHostFragment.findNavController()
-//        navController = Navigation.findNavController(this.b.hostMainFragment)
         b.bottomNav.setupWithNavController(navController)
     }
 
