@@ -3,6 +3,7 @@ package id.web.devin.mvvmkolam.view
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.PelatihListItemBinding
 import id.web.devin.mvvmkolam.model.Pelatih
@@ -50,7 +51,14 @@ class PelatihListAdapter(val pelatihList:ArrayList<Pelatih>):RecyclerView.Adapte
             txtNamaPelatih.text = pelatih.nama
             txtTahunPengalaman.text = pelatih.tglKarir
             Log.d("url",pelatih.gambarUrl.toString())
+            val id = pelatih.id.toString()
+            Log.d("idpelatih",id)
             imageViewPelatih.loadImage(pelatih.gambarUrl.toString(), progressBarPelatih)
+
+            cardPelatih.setOnClickListener {
+                val action = KolamDetailFragmentDirections.actionPelatihDetailFragment(id)
+                Navigation.findNavController(it).navigate(action)
+            }
         }
     }
 }

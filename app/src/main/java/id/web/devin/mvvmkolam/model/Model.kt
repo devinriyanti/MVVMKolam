@@ -16,6 +16,7 @@ data class Pelatih(
 )
 
 data class Produk(
+    @SerializedName("id")
     val idproduk:String?,
     val idkolam:String?,
     val nama:String?,

@@ -1,5 +1,6 @@
 package id.web.devin.mvvmkolam.view
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.navigation.Navigation
@@ -32,11 +33,11 @@ class ProductListAdapter(val produkList:ArrayList<Produk>):RecyclerView.Adapter<
             txtNamaProduk.text = produk.nama
             txtHargaProduk.text = produk.harga.toString()
             txtKota.text = produk.kota
-
+            val id = produk.idproduk.toString()
             imageProduct.loadImage(produk.gambarUrl.toString(), progressBarProduk)
 
             cardViewProduk.setOnClickListener {
-                val action = ProductListFragmentDirections.actionProductDetailFragment()
+                val action = KolamDetailFragmentDirections.actionProductDetailFragment(id)
                 Navigation.findNavController(it).navigate(action)
             }
         }

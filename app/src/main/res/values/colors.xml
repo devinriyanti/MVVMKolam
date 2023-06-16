@@ -7,4 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="abu_muda">#FFDCDCDC</color>
+    <color name="biru_muda">#B0DAFF</color>
+    <color name="biru_tua">#146C94</color>
+    <color name="kuning_pastel">#FEFF86</color>
+    <color name="orange">#F99B7D</color>
+    <color name="hitam_muda">#394867</color>
+    <color name="hitam_tua">#212A3E</color>
+    <color name="abu">#9BA4B5</color>
+    <color name="background">#DCDCDC</color>
 </resources>

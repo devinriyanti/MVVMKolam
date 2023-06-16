@@ -13,19 +13,19 @@ import com.google.gson.reflect.TypeToken
 import id.web.devin.mvvmkolam.model.Produk
 
 class ProductListViewModel(application: Application):AndroidViewModel(application) {
-    val produkLD = MutableLiveData<List<Produk>>()
+    val produkLD = MutableLiveData<Produk>()
 
     private val TAG = "volleyTAG"
     private var queue:RequestQueue? = null
 
-    fun refresh(idKolam:String){
+    fun refresh(idproduk:String){
         queue = Volley.newRequestQueue(getApplication())
-        var url = "https://devinriyanti.000webhostapp.com/productlist.php?id=$idKolam"
+        var url = "https://devinriyanti.000webhostapp.com/productdetail.php?id=$idproduk"
 
         val stringReq = StringRequest(Request.Method.GET,url,
             { response->
-                val sType = object:TypeToken<List<Produk>>(){ }.type
-                val result = Gson().fromJson<List<Produk>>(response,sType)
+                val sType = object:TypeToken<Produk>(){ }.type
+                val result = Gson().fromJson<Produk>(response,sType)
                 produkLD.value = result
                 Log.d("showVolley", response.toString())
             },

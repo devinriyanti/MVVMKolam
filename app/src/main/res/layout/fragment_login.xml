@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="100dp"
             android:text="Selamat Datang"
+            android:textAllCaps="true"
             android:textSize="30sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
@@ -29,6 +30,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:text="Email"
+            android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -38,16 +40,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="Kata Sandi"
+            android:textAllCaps="true"
             app:layout_constraintStart_toStartOf="@+id/editTextEmailLogin"
             app:layout_constraintTop_toBottomOf="@+id/editTextEmailLogin" />
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginBottom="8dp"
+            android:elevation="2dp"
             android:text="MASUK"
-            app:cornerRadius="20sp"
+            android:textSize="16dp"
+            app:cornerRadius="8dp"
             app:layout_constraintBottom_toTopOf="@+id/btnDaftar"
             app:layout_constraintEnd_toEndOf="@+id/btnDaftar"
             app:layout_constraintStart_toStartOf="@+id/btnDaftar" />
@@ -83,12 +88,14 @@
         <Button
             android:id="@+id/btnDaftar"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginBottom="100dp"
+            android:elevation="2dp"
             android:text="Daftar"
-            app:cornerRadius="20sp"
+            android:textSize="16dp"
+            app:cornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

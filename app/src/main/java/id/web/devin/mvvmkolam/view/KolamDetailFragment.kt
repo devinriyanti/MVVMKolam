@@ -27,7 +27,6 @@ class KolamDetailFragment : Fragment() {
     private lateinit var viewModel: DetailKolamViewModel
     private lateinit var b: FragmentKolamDetailBinding
     private lateinit var navController: NavController
-    private val tiketListAdapter = TiketListAdapter(arrayListOf())
     private var kolamID:String? = null
 
     override fun onCreateView(
@@ -72,9 +71,14 @@ class KolamDetailFragment : Fragment() {
 
     private fun observeModel() {
         viewModel.kolamLD.observe(viewLifecycleOwner, Observer {
-            tiketListAdapter.updateTiketList(it.tiket)
+            val id = it.id.toString()
             b.txtNamaKolamDetail.setText(it.nama)
             b.imageKolamDetail.loadImage(it.gambarUrl.toString(),b.progressBarDetailKolam)
+            b.txtNamaKolamDetail.setOnClickListener {
+                val action = KolamDetailFragmentDirections.actionRincianKolamFragment(id)
+                Navigation.findNavController(it).navigate(action)
+            }
+
         })
     }
 }
