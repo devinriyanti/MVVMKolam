@@ -1,5 +1,6 @@
 package id.web.devin.mvvmkolam.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -29,20 +30,46 @@ class PelatihListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val kolamID = GlobalData.kolamID
-        Log.d("kolamPelatih",kolamID)
+        b.txtErorPelatih.visibility = View.GONE
+        val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
+        val id = sharedPreferences.getString("id", null)
+        Log.d("das",id.toString());
         viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
-        viewModel.fetchData(kolamID)
+        viewModel.fetchData(id.toString())
 
         b.recViewPelatih.layoutManager = LinearLayoutManager(context)
         b.recViewPelatih.adapter = pelatihListAdapter
 
+        b.refreshLayoutPelatih.setOnRefreshListener {
+            b.recViewPelatih.visibility = View.GONE
+            b.txtErorPelatih.visibility = View.GONE
+            b.progressLoadPelatih.visibility = View.VISIBLE
+            viewModel.fetchData(id.toString())
+            b.refreshLayoutPelatih.isRefreshing = false
+        }
         observeViewModel()
     }
 
     private fun observeViewModel() {
         viewModel.kolamLD.observe(viewLifecycleOwner, Observer {
-            pelatihListAdapter.updatePelatihList(it.pelatih)
+            if(!it.pelatih.isNullOrEmpty()){
+                pelatihListAdapter.updatePelatihList(it.pelatih)
+            }else{
+               b.txtPelatihAvailable.setText("Tidak Ada Pelatih")
+            }
+        })
+        viewModel.loadingErrorLD.observe(viewLifecycleOwner, Observer {
+            b.txtErorPelatih.visibility = if(it) View.VISIBLE else View.GONE
+        })
+
+        viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
+            if(it){
+                b.progressLoadPelatih.visibility = View.VISIBLE
+                b.recViewPelatih.visibility = View.GONE
+            }else{
+                b.progressLoadPelatih.visibility = View.GONE
+                b.recViewPelatih.visibility = View.VISIBLE
+            }
         })
     }
 }

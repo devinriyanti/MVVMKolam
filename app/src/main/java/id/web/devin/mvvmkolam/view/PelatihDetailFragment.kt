@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import id.web.devin.mvvmkolam.databinding.FragmentPelatihDetailBinding
+import id.web.devin.mvvmkolam.util.calculateTotalYears
 import id.web.devin.mvvmkolam.util.loadImage
 import id.web.devin.mvvmkolam.viewmodel.PelatihListViewModel
 
@@ -30,6 +31,7 @@ class PelatihDetailFragment : Fragment() {
         if(arguments != null){
             val pelatihID = PelatihDetailFragmentArgs.fromBundle(requireArguments()).pelatihID
             viewModel = ViewModelProvider(this).get(PelatihListViewModel::class.java)
+            viewModel.refresh(pelatihID)
 
             observeModel()
         }
@@ -40,10 +42,12 @@ class PelatihDetailFragment : Fragment() {
             val pelatih = viewModel.pelatihLD.value
             pelatih?.let { it->
                 Log.d("idp",it.id.toString())
+                val thnPengalaman = calculateTotalYears(it.tglKarir.toString())
+                val umur = calculateTotalYears(it.tglLahir.toString())
                 b.txtNamaPelatihDetail.text = it.nama
-                b.txtUmurPelatihDetail.text = it.tglLahir
+                b.txtUmurPelatihDetail.text = "${umur} Tahun"
                 b.txtKontakPelatihDetail.text = it.kontak
-                b.txtPengalamanPelatihDetail.text = it.tglKarir
+                b.txtPengalamanPelatihDetail.text = "${thnPengalaman} Tahun"
                 b.txtDeskripsiPelatihDetail.text = it.deskripsi
                 b.imagePelatihDetail.loadImage(it.gambarUrl.toString(),b.progressBarPelatihDetail)
             }

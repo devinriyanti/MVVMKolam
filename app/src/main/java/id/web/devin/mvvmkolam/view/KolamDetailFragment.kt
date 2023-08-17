@@ -1,5 +1,6 @@
 package id.web.devin.mvvmkolam.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -44,28 +46,25 @@ class KolamDetailFragment : Fragment() {
 
         val viewPager = b.viewPagerTab
         val tabLayout = b.tabLayout
+        val tabTitles = listOf("Tiket", "Produk", "Pelatih")
 
         //Setup ViewPager
         val adapter = MyPagerAdapter(childFragmentManager, lifecycle)
         viewPager.adapter = adapter
 
-        TabLayoutMediator(tabLayout, viewPager){tab, position->
-            when (position) {
-                0 -> tab.text = "Tiket"
-                1 -> tab.text = "Produk"
-                2 -> tab.text = "Pelatih"
-            }
-        }
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
 
         if(arguments != null){
-            kolamID = KolamDetailFragmentArgs.fromBundle(requireArguments()).kolamID
+            val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
+            val id = sharedPreferences.getString("id", null)
+            kolamID = id
             viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
-//            Log.d("idkolam",kolamID)
             viewModel.fetchData(kolamID!!)
 
             observeModel()
             navController = Navigation.findNavController(requireParentFragment().requireView())
-
         }
     }
 
@@ -78,7 +77,6 @@ class KolamDetailFragment : Fragment() {
                 val action = KolamDetailFragmentDirections.actionRincianKolamFragment(id)
                 Navigation.findNavController(it).navigate(action)
             }
-
         })
     }
 }

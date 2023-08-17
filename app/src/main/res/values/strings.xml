@@ -21,4 +21,6 @@
     <string name="konfirmasi_kata_sandi">Konfirmasi Kata Sandi</string>
     <string name="registrasi_akun_pribadi">Registrasi Akun Pribadi</string>
     <string name="pencarian">Pencarian</string>
+    <string name="DESKRIPSI" />
+    <string name="deskripsi">DESKRIPSI</string>
 </resources>

@@ -1,5 +1,6 @@
 package id.web.devin.mvvmkolam.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -29,29 +30,49 @@ class TiketListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        b.txtErorTiket.visibility = View.GONE
+        val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
+        val id = sharedPreferences.getString("id", null)
+        viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
+        viewModel.fetchData(id.toString())
 
-//        if(arguments != null){
-//            val kolamID = TiketListFragmentArgs.fromBundle(requireArguments()).kolamID
-            val kolamID = GlobalData.kolamID
-            Log.d("kolamTiket",kolamID)
-            viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
-            viewModel.fetchData(kolamID)
+        b.recViewTiket.layoutManager = LinearLayoutManager(context)
+        b.recViewTiket.adapter = tiketListAdapter
 
-            b.recViewTiket.layoutManager = LinearLayoutManager(context)
-            b.recViewTiket.adapter = tiketListAdapter
+        b.refreshLayoutTiket.setOnRefreshListener {
+            b.recViewTiket.visibility = View.GONE
+            b.txtErorTiket.visibility = View.GONE
+            b.progressLoadTiket.visibility = View.VISIBLE
+            viewModel.fetchData(id.toString())
+            b.refreshLayoutTiket.isRefreshing = false
+        }
+        observeViewModel()
 
-//            b.refreshLayoutTiket.setOnRefreshListener {
-//                b.recViewTiket.visibility = View.GONE
-//                viewModel.fetchData(kolamID)
-//                b.refreshLayoutTiket.isRefreshing = false
-//            }
-            observeViewModel()
-//        }
+
     }
 
     private fun observeViewModel() {
         viewModel.kolamLD.observe(viewLifecycleOwner, Observer {
-            tiketListAdapter.updateTiketList(it.tiket)
+            if(!it.tiket.isNullOrEmpty()){
+                Log.d("ada","tiket")
+                tiketListAdapter.updateTiketList(it.tiket)
+            }else{
+                Log.d("kosong","gaada tiket")
+                b.txtTiketStok.setText("Tidak Ada Tiket")
+            }
+        })
+        viewModel.loadingErrorLD.observe(viewLifecycleOwner, Observer {
+            b.txtErorTiket.visibility = if(it) View.VISIBLE else View.GONE
+        })
+
+        viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
+            if(it){
+                b.progressLoadTiket.visibility = View.VISIBLE
+                b.recViewTiket.visibility = View.GONE
+            }else{
+                b.progressLoadTiket.visibility = View.GONE
+                b.recViewTiket.visibility = View.VISIBLE
+            }
         })
     }
 }

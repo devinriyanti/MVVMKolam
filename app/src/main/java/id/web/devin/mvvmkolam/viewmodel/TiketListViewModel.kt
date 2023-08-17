@@ -13,7 +13,7 @@ import com.google.gson.reflect.TypeToken
 import id.web.devin.mvvmkolam.model.Produk
 
 class TiketListViewModel(application: Application):AndroidViewModel(application) {
-    val produkLD = MutableLiveData<List<Produk>>()
+    val produkLD = MutableLiveData<Produk>()
     val loadingErrorLD = MutableLiveData<Boolean>()
     val loadingLD = MutableLiveData<Boolean>()
 
@@ -25,13 +25,13 @@ class TiketListViewModel(application: Application):AndroidViewModel(application)
         loadingLD.value = true
 
         queue = Volley.newRequestQueue(getApplication())
-        var url = "https://devinriyanti.000webhostapp.com/productlist.php?id=$idKolam"
+        var url = "https://lokowai.shop/productlist.php?id=$idKolam"
 
         val stringReq = StringRequest(
             Request.Method.GET,url,
             { response->
-                val sType = object: TypeToken<List<Produk>>(){ }.type
-                val result = Gson().fromJson<List<Produk>>(response,sType)
+                val sType = object: TypeToken<Produk>(){ }.type
+                val result = Gson().fromJson<Produk>(response,sType)
                 produkLD.value = result
 
                 loadingLD.value = false
@@ -40,6 +40,24 @@ class TiketListViewModel(application: Application):AndroidViewModel(application)
             {
                 loadingErrorLD.value = true
                 loadingLD.value = false
+                Log.d("showVolley", it.toString())
+            })
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
+
+    fun getID(){
+        queue = Volley.newRequestQueue(getApplication())
+        var url = "https://lokowai.shop/idtiket.php"
+
+        val stringReq = StringRequest(Request.Method.GET,url,
+            { response->
+                val sType = object:TypeToken<Produk>(){ }.type
+                val result = Gson().fromJson<Produk>(response,sType)
+                produkLD.value = result
+                Log.d("showVolley", response.toString())
+            },
+            {
                 Log.d("showVolley", it.toString())
             })
         stringReq.tag = TAG

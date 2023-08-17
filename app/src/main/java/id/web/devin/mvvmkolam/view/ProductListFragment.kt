@@ -1,5 +1,6 @@
 package id.web.devin.mvvmkolam.view
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -33,29 +34,45 @@ class ProductListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        if(arguments != null){
-//            val kolamID = ProductListFragmentArgs.fromBundle(requireArguments()).kolamID
-        val kolamID = GlobalData.kolamID
-        Log.d("kolamProduk", kolamID)
+        b.txtErorProduk.visibility = View.GONE
+        val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
+        val id = sharedPreferences.getString("id", null)
         viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
-        viewModel.fetchData(kolamID)
+        viewModel.fetchData(id.toString())
 
         b.recViewProduct.layoutManager = GridLayoutManager(context, 2)
         b.recViewProduct.adapter = productListAdapter
 
-//        b.refreshLayoutProduct.setOnRefreshListener {
-//            b.recViewProduct.visibility = View.GONE
-//            viewModel.fetchData(kolamID)
-//            b.refreshLayoutProduct.isRefreshing = false
-//        }
+        b.refreshLayoutProduct.setOnRefreshListener {
+            b.recViewProduct.visibility = View.GONE
+            b.txtErorProduk.visibility = View.GONE
+            b.progressLoadProduk.visibility = View.VISIBLE
+            viewModel.fetchData(id.toString())
+            b.refreshLayoutProduct.isRefreshing = false
+        }
         observeViewModel()
-//    }
     }
 
     private fun observeViewModel() {
         viewModel.kolamLD.observe(viewLifecycleOwner, Observer{
-            productListAdapter.updateProductList(it.produk)
+            if(!it.produk.isNullOrEmpty()){
+                productListAdapter.updateProductList(it.produk)
+            }else{
+                b.txtProdukStok.setText("Tidak Ada Produk")
+            }
+        })
+        viewModel.loadingErrorLD.observe(viewLifecycleOwner, Observer {
+            b.txtErorProduk.visibility = if(it) View.VISIBLE else View.GONE
+        })
+
+        viewModel.loadingLD.observe(viewLifecycleOwner, Observer {
+            if(it){
+                b.progressLoadProduk.visibility = View.VISIBLE
+                b.recViewProduct.visibility = View.GONE
+            }else{
+                b.progressLoadProduk.visibility = View.GONE
+                b.recViewProduct.visibility = View.VISIBLE
+            }
         })
     }
 }

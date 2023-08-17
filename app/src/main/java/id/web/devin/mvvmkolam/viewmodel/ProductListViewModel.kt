@@ -20,7 +20,25 @@ class ProductListViewModel(application: Application):AndroidViewModel(applicatio
 
     fun refresh(idproduk:String){
         queue = Volley.newRequestQueue(getApplication())
-        var url = "https://devinriyanti.000webhostapp.com/productdetail.php?id=$idproduk"
+        var url = "https://lokowai.shop/productdetail.php?id=$idproduk"
+
+        val stringReq = StringRequest(Request.Method.GET,url,
+            { response->
+                val sType = object:TypeToken<Produk>(){ }.type
+                val result = Gson().fromJson<Produk>(response,sType)
+                produkLD.value = result
+                Log.d("showVolley", response.toString())
+            },
+            {
+                Log.d("showVolley", it.toString())
+            })
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
+
+    fun getID(){
+        queue = Volley.newRequestQueue(getApplication())
+        var url = "https://lokowai.shop/idproduk.php"
 
         val stringReq = StringRequest(Request.Method.GET,url,
             { response->

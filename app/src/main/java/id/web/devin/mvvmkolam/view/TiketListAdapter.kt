@@ -7,6 +7,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.TiketListItemBinding
 import id.web.devin.mvvmkolam.model.Tiket
+import id.web.devin.mvvmkolam.util.formatCurrency
 import id.web.devin.mvvmkolam.util.loadImage
 
 class TiketListAdapter(val tiketList:ArrayList<Tiket>):RecyclerView.Adapter<TiketListAdapter.TiketViewHolder>() {
@@ -28,8 +29,8 @@ class TiketListAdapter(val tiketList:ArrayList<Tiket>):RecyclerView.Adapter<Tike
             val tiket = tiketList[position]
             with(holder.b){
                 txtTiket.text = tiket.nama
-                txtHargaTiket.text = tiket.harga.toString()
-
+                val harga = tiket.harga?.let { formatCurrency(it) }
+                txtHargaTiket.text = harga
                 imageView.loadImage(tiket.gambarUrl.toString(), progressBarTiketCard)
                 btnBeli.setOnClickListener {
                     val tiketID = tiket.idproduk

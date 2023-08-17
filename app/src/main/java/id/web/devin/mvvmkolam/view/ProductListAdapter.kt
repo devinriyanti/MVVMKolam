@@ -7,7 +7,9 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.ProductListItemBinding
 import id.web.devin.mvvmkolam.model.Produk
+import id.web.devin.mvvmkolam.util.formatCurrency
 import id.web.devin.mvvmkolam.util.loadImage
+import kotlin.math.roundToLong
 
 class ProductListAdapter(val produkList:ArrayList<Produk>):RecyclerView.Adapter<ProductListAdapter.ProductViewHolder>() {
     class ProductViewHolder(val b:ProductListItemBinding):RecyclerView.ViewHolder(b.root)
@@ -29,9 +31,11 @@ class ProductListAdapter(val produkList:ArrayList<Produk>):RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: ProductViewHolder, position: Int) {
         val produk = produkList[position]
+
         with(holder.b){
             txtNamaProduk.text = produk.nama
-            txtHargaProduk.text = produk.harga.toString()
+            val harga = produk?.harga?.let { formatCurrency(it) }
+            txtHargaProduk.text = harga
             txtKota.text = produk.kota
             val id = produk.idproduk.toString()
             imageProduct.loadImage(produk.gambarUrl.toString(), progressBarProduk)

@@ -7,6 +7,7 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.PelatihListItemBinding
 import id.web.devin.mvvmkolam.model.Pelatih
+import id.web.devin.mvvmkolam.util.calculateTotalYears
 import id.web.devin.mvvmkolam.util.loadImage
 import java.util.Calendar
 import java.util.Date
@@ -14,26 +15,10 @@ import java.util.Date
 class PelatihListAdapter(val pelatihList:ArrayList<Pelatih>):RecyclerView.Adapter<PelatihListAdapter.PelatihViewHolder>() {
     class PelatihViewHolder(val b:PelatihListItemBinding):RecyclerView.ViewHolder(b.root)
 
-    fun updatePelatihList(newPelatihList:ArrayList<Pelatih>){
+    fun updatePelatihList(newPelatihList:List<Pelatih>){
         pelatihList.clear()
         pelatihList.addAll(newPelatihList)
         notifyDataSetChanged()
-    }
-
-    fun tahunPengalamanKerja(tglMulaiKarir: Date, tglSekarang:Date): Int{
-        val calendar = Calendar.getInstance()
-        calendar.time = tglMulaiKarir
-        val tahunMulaiKarir = calendar.get(Calendar.YEAR)
-
-        calendar.time = tglSekarang
-        val tahunSekarang = calendar.get(Calendar.YEAR)
-
-        // Memastikan rentang tanggal valid
-        if (tahunMulaiKarir > tahunSekarang) {
-            throw IllegalArgumentException("Invalid date range")
-        }
-
-        return tahunMulaiKarir
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PelatihViewHolder {
@@ -49,10 +34,9 @@ class PelatihListAdapter(val pelatihList:ArrayList<Pelatih>):RecyclerView.Adapte
         val pelatih = pelatihList[position]
         with(holder.b){
             txtNamaPelatih.text = pelatih.nama
-            txtTahunPengalaman.text = pelatih.tglKarir
-            Log.d("url",pelatih.gambarUrl.toString())
+            val thnPengalaman = calculateTotalYears(pelatih.tglKarir.toString())
+            txtTahunPengalaman.text = "Pengalaman: ${thnPengalaman} Tahun"
             val id = pelatih.id.toString()
-            Log.d("idpelatih",id)
             imageViewPelatih.loadImage(pelatih.gambarUrl.toString(), progressBarPelatih)
 
             cardPelatih.setOnClickListener {

@@ -11,6 +11,7 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import id.web.devin.mvvmkolam.model.Pelatih
+import id.web.devin.mvvmkolam.model.Produk
 
 class PelatihListViewModel(application: Application):AndroidViewModel(application) {
     val pelatihLD = MutableLiveData<Pelatih>()
@@ -20,7 +21,7 @@ class PelatihListViewModel(application: Application):AndroidViewModel(applicatio
 
     fun refresh(idpelatih:String){
         queue = Volley.newRequestQueue(getApplication())
-        var url = "https://devinriyanti.000webhostapp.com/pelatihdetail.php?id=$idpelatih"
+        var url = "https://lokowai.shop/pelatihdetail.php?id=$idpelatih"
 
         val stringReq = StringRequest(
             Request.Method.GET,url,
@@ -37,6 +38,23 @@ class PelatihListViewModel(application: Application):AndroidViewModel(applicatio
         queue?.add(stringReq)
     }
 
+    fun getID(){
+        queue = Volley.newRequestQueue(getApplication())
+        var url = "https://lokowai.shop/idproduk.php"
+
+        val stringReq = StringRequest(Request.Method.GET,url,
+            { response->
+                val sType = object:TypeToken<Pelatih>(){ }.type
+                val result = Gson().fromJson<Pelatih>(response,sType)
+                pelatihLD.value = result
+                Log.d("showVolley", response.toString())
+            },
+            {
+                Log.d("showVolley", it.toString())
+            })
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
     override fun onCleared() {
         super.onCleared()
         queue?.cancelAll(TAG)

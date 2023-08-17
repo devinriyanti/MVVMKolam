@@ -5,12 +5,17 @@
     <item
         android:id="@+id/itemRumah"
         android:icon="@drawable/ic_baseline_home_24"
-        android:title="Rumah"
+        android:title="Beranda"
         app:showAsAction="always" />
     <item
-        android:id="@+id/itemCari"
-        android:icon="@drawable/ic_baseline_search_24"
-        android:title="Cari"
+        android:id="@+id/itemPembelian"
+        android:icon="@drawable/baseline_assignment_24"
+        android:title="Pembelian"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/itemKeranjang"
+        android:icon="@drawable/baseline_shopping_cart_24"
+        android:title="Keranjang"
         app:showAsAction="always" />
     <item
         android:id="@+id/itemDataDiri"

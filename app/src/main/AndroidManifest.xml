@@ -17,7 +17,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".KolamDetailActivity"
+            android:name=".view.CheckoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.AdminMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.KolamDetailActivity"
             android:exported="false" />
         <activity
             android:name=".view.LoginActivity"
