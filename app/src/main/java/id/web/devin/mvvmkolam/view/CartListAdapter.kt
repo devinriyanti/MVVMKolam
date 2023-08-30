@@ -1,23 +1,19 @@
 package id.web.devin.mvvmkolam.view
 
+import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import id.web.devin.mvvmkolam.databinding.CartItemBinding
 import id.web.devin.mvvmkolam.databinding.CartListItemBinding
 import id.web.devin.mvvmkolam.model.Cart
-import id.web.devin.mvvmkolam.util.formatCurrency
-import id.web.devin.mvvmkolam.util.loadImage
-import id.web.devin.mvvmkolam.viewmodel.CartViewModel
+import id.web.devin.mvvmkolam.model.ProdukCart
 
-class CartListAdapter(val cartList: ArrayList<Cart>) : RecyclerView.Adapter<CartListAdapter.CartViewHolder>() {
+class CartListAdapter(private val context: Context, val cartList: ArrayList<Cart>,private val listener: CartItemAdapter.CartItemListener) : RecyclerView.Adapter<CartListAdapter.CartViewHolder>() {
     class CartViewHolder(val binding: CartListItemBinding) : RecyclerView.ViewHolder(binding.root)
-
-    private lateinit var viewModel: CartViewModel
 
     fun updateCartList(newCartList: List<Cart>) {
         cartList.clear()
@@ -33,22 +29,28 @@ class CartListAdapter(val cartList: ArrayList<Cart>) : RecyclerView.Adapter<Cart
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val cart = cartList[position]
         with(holder.binding){
-            txtNamaKolamCart.text = cart.nama
-            Log.d("cart","uhuhu")
-            Log.d("kolam","cart.nama.toString()")
-
+            val kolam = cart.nama
+            txtNamaKolamCart.text = kolam
             btnCheckout.setOnClickListener {
-//                val action
-//                Navigation.findNavController(it).navigate(action)
+                var intent = Intent(holder.itemView.context, CheckoutActivity::class.java)
+                holder.itemView.context.startActivity(intent)
+                val sharedPreferences = context.getSharedPreferences("idkolam", Context.MODE_PRIVATE)
+                val editor = sharedPreferences.edit()
+                editor.putString("id", cart.id)
+                editor.apply()
             }
-//            viewModel = ViewModelProvider(ow).get(CartViewModel::class.java)
-//            val vM = ViewModelProvider(this).get(CartViewModel::class.java)
-            val cartItemAdapter = CartItemAdapter(arrayListOf())
-            cartItemRecView.layoutManager = LinearLayoutManager(root.context)
-            cartItemRecView.adapter = cartItemAdapter
+            cart.produk.forEach {
+                if (cart.id == it.idkolam){
+                    val cartItemAdapter = CartItemAdapter(arrayListOf(), listener)
+                    cartItemRecView.layoutManager = LinearLayoutManager(root.context)
+                    cartItemRecView.adapter = cartItemAdapter
+
+                    cartItemAdapter.updateCartItem(cart.produk)
+                    Log.d("produkList",cart.produk.toString())
+                }
+            }
         }
     }
-
     override fun getItemCount(): Int {
         return cartList.size
     }

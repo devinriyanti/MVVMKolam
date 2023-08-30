@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MVVMKolam</string>
+    <string name="app_name">Lokowai</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string-array name="jenisKelamin">
         <item>Laki-Laki</item>

@@ -21,7 +21,6 @@ class AdminMainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostAdmin) as NavHostFragment
         navController = navHostFragment.findNavController()
         b.bottomNavAdmin.setupWithNavController(navController)
-        NavigationUI.setupActionBarWithNavController(this, navController)
     }
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController,null)

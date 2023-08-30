@@ -24,6 +24,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ProgressBar
+                    android:id="@+id/progressCheckout"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardAlamatCO"
                     android:layout_width="0dp"
@@ -54,6 +64,7 @@
                             android:id="@+id/txtNamaCO"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="23dp"
                             android:layout_marginTop="4dp"
                             android:text="Nama"
                             app:layout_constraintStart_toStartOf="@+id/textView35"
@@ -88,7 +99,7 @@
                     android:id="@+id/cardProdukCO"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     app:layout_constraintEnd_toEndOf="@+id/cardAlamatCO"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardAlamatCO">
@@ -100,12 +111,25 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recViewProdukCO"
                             android:layout_width="0dp"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
+                            android:layout_marginTop="8dp"
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="16dp"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/txtNamaKolamCO" />
+
+                        <TextView
+                            android:id="@+id/txtNamaKolamCO"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:text="Kolam"
+                            android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -113,13 +137,13 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView10"
+                    android:id="@+id/cardPengiriman"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     app:layout_constraintEnd_toEndOf="@+id/cardAlamatCO"
                     app:layout_constraintStart_toStartOf="@+id/cardAlamatCO"
-                    app:layout_constraintTop_toBottomOf="@+id/cardProdukCO">
+                    app:layout_constraintTop_toBottomOf="@+id/cardTotalPesanan">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -132,35 +156,100 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="16dp"
-                            android:text="Opsi Pengiriman"
+                            android:text="Pengiriman"
+                            android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/textView44"
+                            android:id="@+id/textView14"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Jasa Kirim : "
+                            app:layout_constraintStart_toStartOf="@+id/textView43"
+                            app:layout_constraintTop_toBottomOf="@+id/textView43" />
+
+                        <TextView
+                            android:id="@+id/txtJasaKirim"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="@+id/textView43"
+                            app:layout_constraintStart_toEndOf="@+id/textView14"
+                            app:layout_constraintTop_toBottomOf="@+id/textView43" />
+
+                        <TextView
+                            android:id="@+id/textView38"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="16dp"
-                            android:drawableEnd="@drawable/baseline_arrow_forward_ios_24"
+                            android:layout_marginTop="8dp"
+                            android:text="Layanan :"
+                            app:layout_constraintStart_toStartOf="@+id/textView14"
+                            app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+                        <TextView
+                            android:id="@+id/txtLayananPengiriman"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="@+id/txtJasaKirim"
+                            app:layout_constraintStart_toEndOf="@+id/textView38"
+                            app:layout_constraintTop_toBottomOf="@+id/txtJasaKirim" />
+
+                        <TextView
+                            android:id="@+id/textView40"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp"
+                            android:text="Estimasi :"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintStart_toStartOf="@+id/textView38"
+                            app:layout_constraintTop_toBottomOf="@+id/textView38" />
+
+                        <TextView
+                            android:id="@+id/txtEstimasiPengiriman"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/txtLayananPengiriman"
+                            app:layout_constraintStart_toEndOf="@+id/textView40"
+                            app:layout_constraintTop_toBottomOf="@+id/txtLayananPengiriman" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardPembayaran"
                     android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView11">
+                    app:layout_constraintTop_toBottomOf="@+id/cardPengiriman">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
+
+                        <Button
+                            android:id="@+id/btnBuatPesananCO"
+                            android:layout_width="0dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Buat Pesanan"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
 
                         <TextView
                             android:id="@+id/textView45"
@@ -198,8 +287,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
+                            android:layout_marginBottom="24dp"
                             android:text="Total Pembayaran"
                             android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/btnBuatPesananCO"
                             app:layout_constraintStart_toStartOf="@+id/textView47"
                             app:layout_constraintTop_toBottomOf="@+id/textView47" />
 
@@ -208,7 +299,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:text="Rp."
+                            android:text="Rp"
                             app:layout_constraintEnd_toEndOf="@+id/textView45"
                             app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
@@ -217,42 +308,33 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Rp."
+                            android:text="Rp"
                             app:layout_constraintEnd_toEndOf="@+id/txtSubtotalCO"
                             app:layout_constraintTop_toBottomOf="@+id/txtSubtotalCO" />
 
                         <TextView
-                            android:id="@+id/txtTotalHargaCO"
+                            android:id="@+id/txtTotalPembayaranCO"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Rp."
+                            android:layout_marginBottom="24dp"
+                            android:text="Rp"
                             android:textStyle="bold"
+                            app:layout_constraintBottom_toTopOf="@+id/btnBuatPesananCO"
                             app:layout_constraintEnd_toEndOf="@+id/txtTotalPengirimanCO"
                             app:layout_constraintTop_toBottomOf="@+id/txtTotalPengirimanCO" />
 
-                        <Button
-                            android:id="@+id/btnBuatPesananCO"
-                            android:layout_width="0dp"
-                            android:layout_height="60dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginBottom="16dp"
-                            android:text="Buat Pesanan"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView11"
+                    android:id="@+id/cardTotalPesanan"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="2dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardView10">
+                    app:layout_constraintTop_toBottomOf="@+id/cardProdukCO">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -277,7 +359,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="16dp"
                             android:layout_marginBottom="16dp"
-                            android:text="Rp."
+                            android:text="Rp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"

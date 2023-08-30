@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.text.NumberFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -23,7 +24,7 @@ import javax.crypto.spec.SecretKeySpec
 fun ImageView.loadImage(url:String, progressBar: ProgressBar){
     Picasso.get()
         .load(url)
-        .resize(1000,1000)
+        .resize(1000,1300)
         .centerCrop()
         .error(R.drawable.ic_baseline_error_24)
         .into(this, object :Callback{
@@ -38,7 +39,10 @@ fun ImageView.loadImage(url:String, progressBar: ProgressBar){
 
 fun formatCurrency(amount: Double): String {
     val format = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-    return format.format(amount)
+    format.maximumFractionDigits = 0
+    format.currency = Currency.getInstance("IDR")
+    val formattedAmount = format.format(amount)
+    return formattedAmount.replace(Regex("\\.00$"), "")
 }
 
 fun calculateTotalYears(dateString: String): Int {
@@ -65,6 +69,16 @@ fun formatDate2(inputDate: String): String {
     return outputFormat.format(date)
 }
 
+fun formatDateTime(inputDate: String):String {
+    val inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+
+    val dateTime = LocalDateTime.parse(inputDate, inputFormatter)
+    val formattedDateTime = dateTime.format(outputFormatter)
+
+    return formattedDateTime
+}
+
 object EncryptionUtils{
     private const val secretKey = "mySecretKey"
     fun encrypt(text: String): String {
@@ -73,15 +87,6 @@ object EncryptionUtils{
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec)
         val encryptedBytes = cipher.doFinal(text.toByteArray(StandardCharsets.UTF_8))
         return android.util.Base64.encodeToString(encryptedBytes, android.util.Base64.DEFAULT)
-    }
-
-    fun decrypt(encryptedText: String): String {
-        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
-        val secretKeySpec = SecretKeySpec(generateKey(secretKey), "AES")
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec)
-        val encryptedBytes = android.util.Base64.decode(encryptedText, android.util.Base64.DEFAULT)
-        val decryptedBytes = cipher.doFinal(encryptedBytes)
-        return String(decryptedBytes, StandardCharsets.UTF_8)
     }
 
     private fun generateKey(secretKey: String): ByteArray? {

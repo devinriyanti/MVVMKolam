@@ -1,17 +1,23 @@
 package id.web.devin.mvvmkolam.view
 
-import android.util.Log
+import android.graphics.Color
+import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.CartItemBinding
 import id.web.devin.mvvmkolam.model.ProdukCart
 import id.web.devin.mvvmkolam.util.formatCurrency
 import id.web.devin.mvvmkolam.util.loadImage
 
-class CartItemAdapter(val cartItemList:ArrayList<ProdukCart>):RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
+class CartItemAdapter(val cartItemList:ArrayList<ProdukCart>, val cartItemListener: CartItemListener):RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
     class CartItemViewHolder(val b:CartItemBinding):RecyclerView.ViewHolder(b.root)
-
+    interface CartItemListener {
+        fun onRemoveClicked(cartItem: ProdukCart)
+        fun onDecreaseClicked(cartItem: ProdukCart)
+        fun onIncreaseClicked(cartItem: ProdukCart)
+    }
     fun updateCartItem(newCartItem:ArrayList<ProdukCart>){
         cartItemList.clear()
         cartItemList.addAll(newCartItem)
@@ -24,7 +30,6 @@ class CartItemAdapter(val cartItemList:ArrayList<ProdukCart>):RecyclerView.Adapt
     }
 
     override fun getItemCount(): Int {
-        Log.d("size", cartItemList.size.toString())
         return cartItemList.size
     }
 
@@ -33,9 +38,40 @@ class CartItemAdapter(val cartItemList:ArrayList<ProdukCart>):RecyclerView.Adapt
         with(holder.b){
             txtNamaProdukCart.text = cartItem.namaProduk
             val harga = cartItem.harga?.let { formatCurrency(it) }
-            txtHargaProdukCart.text = harga
-            txtQtyProdukCart.text = cartItem.qty.toString()
+            if (cartItem.diskon == 0.0){
+                txtHargaProdukCart.text = harga
+            }else{
+                val hargaDiskon = cartItem.harga - (cartItem.harga * cartItem.diskon!! /100)
+                txtHargaProdukCart.text = Html.fromHtml("<strike>$harga</strike>", Html.FROM_HTML_MODE_LEGACY)
+                txtHargaProdukCart.setTextColor(Color.parseColor("#9BA4B5"))
+                txtHargaDiskon.text = formatCurrency(hargaDiskon)
+                txtHargaDiskon.setTextColor(Color.parseColor("#F99B7D"))
+            }
+            var qty = cartItem.qty
+            txtQtyProdukCart.text = qty.toString()
             imgProdukCart.loadImage(cartItem.gambar,progressLoadCartItem)
+
+            imgHapus.setOnClickListener {
+                cartItemListener.onRemoveClicked(cartItem)
+                Toast.makeText(root.context,"Dihapus", Toast.LENGTH_SHORT).show()
+            }
+
+            imgKurang.setOnClickListener {
+                if(qty < 1){
+                    cartItemListener.onRemoveClicked(cartItem)
+//                    Toast.makeText(root.context,"Dihapus", Toast.LENGTH_SHORT).show()
+                }else{
+                    qty = qty - 1
+                    txtQtyProdukCart.text = qty.toString()
+                    cartItemListener.onDecreaseClicked(cartItem)
+                }
+            }
+
+            imgTambah.setOnClickListener {
+                qty = qty + 1
+                txtQtyProdukCart.text = qty.toString()
+                cartItemListener.onIncreaseClicked(cartItem)
+            }
         }
     }
 }

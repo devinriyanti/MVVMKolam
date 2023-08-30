@@ -71,6 +71,7 @@ class KolamDetailFragment : Fragment() {
     private fun observeModel() {
         viewModel.kolamLD.observe(viewLifecycleOwner, Observer {
             val id = it.id.toString()
+
             b.txtNamaKolamDetail.setText(it.nama)
             b.imageKolamDetail.loadImage(it.gambarUrl.toString(),b.progressBarDetailKolam)
             b.txtNamaKolamDetail.setOnClickListener {

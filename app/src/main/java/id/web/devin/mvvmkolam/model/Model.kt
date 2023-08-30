@@ -57,6 +57,7 @@ data class Kolam(
     val gambarUrl: String?,
     val is_maintenance: String?,
     val kota: String?,
+    val lokasi:String?,
     @SerializedName("email_pengguna")
     val admin: String?,
     @SerializedName("product")
@@ -71,11 +72,54 @@ data class Pengguna(
     val alamat:String?,
     val telepon:String?,
     val jenis_kelamin:String?,
+    val norekening: String?,
     @SerializedName("tanggal_lahir")
     val tglLahir: String?,
     @SerializedName("password")
     val pwd:String?,
-    val role:Role
+    val role:Role,
+    @SerializedName("nama_kota")
+    val kota: String,
+    val idkota: String
+)
+
+data class Transaction(
+    val id: String,
+    val namaKolam:String,
+    val email:String,
+    val idkota:String,
+    @SerializedName("status_transaksi")
+    val status:StatusTransaksi,
+    val produk: ArrayList<ProductTransaction>
+)
+data class UploadResponse(
+    val message: String,
+    val imageUrl: String
+)
+
+data class ProductTransaction(
+    val id: String,
+    val idkolam: String,
+    val tanggal: String,
+    val total_harga: Double,
+    val alamat_kirim: String,
+    val status_transaksi: String,
+    val urlBukti: String,
+    @SerializedName("tanggal_pembayaran")
+    val tanggalBayar:String,
+    val no_resi:String,
+    val idkota: Int,
+    val email_pengguna: String,
+    val namaKolam: String,
+    @SerializedName("email")
+    val emailAdmin: String,
+    val idproduk: String,
+    val nama: String,
+    val qty: Int,
+    val harga: Double,
+    val diskon: Double,
+    val berat: Double,
+    val gambar: String
 )
 
 data class Cart(
@@ -83,6 +127,7 @@ data class Cart(
     val id:String,
     @SerializedName("namaKolam")
     val nama:String,
+    val idkota:String,
     val produk: ArrayList<ProdukCart>
 )
 
@@ -92,10 +137,14 @@ data class ProdukCart(
     val total_harga:Double,
     @SerializedName("email_pengguna")
     val email:String,
+    val idproduk:String,
     val namaProduk:String,
     val harga:Double,
     val qty: Int,
-    val gambar:String
+    val diskon: Double,
+    val gambar:String,
+    val berat:Double,
+    val norekening:String
 )
 
 data class ShippingCostRequest(
@@ -167,4 +216,11 @@ enum class Gender(val displayText:String) {
 enum class Role{
     Pengguna,
     Admin
+}
+
+enum class StatusTransaksi{
+    Diproses,
+    Dikirim,
+    Diterima,
+    Dibatalkan
 }

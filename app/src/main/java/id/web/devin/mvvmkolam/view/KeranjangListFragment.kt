@@ -7,10 +7,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import id.web.devin.mvvmkolam.util.Global
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.CartListItemBinding
@@ -19,10 +20,10 @@ import id.web.devin.mvvmkolam.model.Cart
 import id.web.devin.mvvmkolam.model.ProdukCart
 import id.web.devin.mvvmkolam.viewmodel.CartViewModel
 
-class KeranjangListFragment : Fragment(){
+class KeranjangListFragment : Fragment(), CartItemAdapter.CartItemListener {
     private lateinit var b:FragmentKeranjangListBinding
     private lateinit var viewModel: CartViewModel
-    private val cartListAdapter= CartListAdapter(arrayListOf())
+    private lateinit var cartListAdapter: CartListAdapter
     lateinit var email:String
 
     override fun onCreateView(
@@ -36,11 +37,10 @@ class KeranjangListFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        cartListAdapter = CartListAdapter(requireContext(), arrayListOf(), this)
         email = context?.let { Global.getEmail(it) }.toString()
         b.txtErrorCart.visibility = View.GONE
-//        Log.d("emailCart",email)
         viewModel = ViewModelProvider(this).get(CartViewModel::class.java)
-
         viewModel.fetchCartList(email)
 
         observeView()
@@ -52,8 +52,6 @@ class KeranjangListFragment : Fragment(){
             if(!it.isNullOrEmpty()){
 
                 cartListAdapter.updateCartList(it)
-//                Log.d("dasda",Car)
-//                cartItemAdapter.updateCartItem(it)
                 b.textIsiKeranjang.text = ""
 
                 b.refreshCart.setOnRefreshListener {
@@ -85,46 +83,36 @@ class KeranjangListFragment : Fragment(){
                 b.textIsiKeranjang.visibility = View.VISIBLE
             }
         })
+        viewModel.statusRemoveLD.observe(viewLifecycleOwner, Observer {
+            if(it == false){
+                refreshCartList()
+            }
+        })
     }
 
-    private inner class CartListAdapter(val cartList: ArrayList<Cart>) : RecyclerView.Adapter<CartListAdapter.CartViewHolder>() {
-        private inner class CartViewHolder(val binding: CartListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    private fun refreshCartList() {
+        viewModel.fetchCartList(email)
+    }
 
-        fun updateCartList(newCartList: List<Cart>) {
-            cartList.clear()
-            cartList.addAll(newCartList)
-            notifyDataSetChanged()
+    override fun onRemoveClicked(cartItem: ProdukCart) {
+        viewModel.removeCart(cartItem.idkeranjangs, cartItem.idproduk)
+        refreshCartList()
+    }
+
+    var qty: Int = 0
+    override fun onDecreaseClicked(cartItem: ProdukCart) {
+        qty = cartItem.qty - 1
+        if(qty >= 1){
+            viewModel.updateQty(qty, cartItem.idkeranjangs, cartItem.idproduk)
+        }else if(qty < 1){
+            viewModel.removeCart(cartItem.idkeranjangs, cartItem.idproduk)
         }
+        refreshCartList()
+    }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-            val binding = CartListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return CartViewHolder(binding)
-        }
-
-        override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
-            val cart = cartList[position]
-            with(holder.binding){
-                val kolam = cart.nama
-                txtNamaKolamCart.text = kolam
-                btnCheckout.setOnClickListener {
-                    var intent = Intent(context, CheckoutActivity::class.java)
-                    startActivity(intent)
-                }
-                cart.produk.forEach {
-                    if (cart.id == it.idkolam){
-
-                        val cartItemAdapter = CartItemAdapter(arrayListOf())
-                        cartItemRecView.layoutManager = LinearLayoutManager(root.context)
-                        cartItemRecView.adapter = cartItemAdapter
-
-                        cartItemAdapter.updateCartItem(cart.produk)
-                        Log.d("produkList",cart.produk.toString())
-                    }
-                }
-            }
-        }
-        override fun getItemCount(): Int {
-            return cartList.size
-        }
+    override fun onIncreaseClicked(cartItem: ProdukCart) {
+        qty = cartItem.qty + 1
+        viewModel.updateQty(qty, cartItem.idkeranjangs, cartItem.idproduk)
+        refreshCartList()
     }
 }

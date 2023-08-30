@@ -61,9 +61,9 @@ class ProductDetailFragment : Fragment() {
                 val diskon = it.diskon
                 b.txtHargaProductDetail.text = harga
                 b.txtDeskripsi.text = it.deskripsi
-                b.txtBeratProduk.text = it.berat.toString()
+                b.txtBeratProduk.text = "${it.berat?.toInt()} gr"
                 if(!diskon!!.equals(0.0)){
-                    b.txtDiskonProduk.text = "Diskon $diskon%"
+                    b.txtDiskonProduk.text = "Diskon ${diskon.toInt()}%"
                 }else{
                     b.txtDiskonProduk.visibility = View.GONE
                 }
@@ -73,6 +73,7 @@ class ProductDetailFragment : Fragment() {
                 idKolam = sharedPreferences.getString("id", null)
                 val harga2 = it.harga
                 val idproduk = it.idproduk
+
                 //jangan lupa cek qty di produk ada atau tidak
                 //...code here
                 if(role == Role.Admin.toString()){
@@ -85,7 +86,7 @@ class ProductDetailFragment : Fragment() {
                         qty = qty!! + 1 // salah, contoh aja
                         total = qty!! * (harga2!!-(harga2 * diskon!!/100))
                         cartViewModel.addToCart(idKolam!!, total!!,email!!, idproduk!!, qty!!, harga2, diskon)
-                        Toast.makeText(context,"Berhasil Ditambahkan", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context,"Berhasil Ditambahkan $qty", Toast.LENGTH_SHORT).show()
                     }
                     b.btnEditProdukDetail.visibility = View.GONE
                     b.btnHapusProdukDetail.visibility = View.GONE

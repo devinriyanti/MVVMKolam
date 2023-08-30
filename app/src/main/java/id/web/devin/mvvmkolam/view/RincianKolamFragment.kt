@@ -1,6 +1,8 @@
 package id.web.devin.mvvmkolam.view
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -42,6 +44,12 @@ class RincianKolamFragment : Fragment() {
             b.txtNamaKolamRIncian.text = it.nama
             b.txtAlamatKolamRincian.text = it.alamat
             b.txtDeskripsiKolamRincian.text = it.deskripsi
+            val peta = it.lokasi
+            b.txtPeta.setOnClickListener {
+                // Membuka browser dengan URL peta
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(peta))
+                startActivity(intent)
+            }
             b.imageRincianKolam.loadImage(it.gambarUrl.toString(),b.progressBarRincian)
         })
     }

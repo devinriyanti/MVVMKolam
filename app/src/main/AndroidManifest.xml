@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="id.web.devin.mvvmkolam">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +18,19 @@
         android:theme="@style/Theme.MVVMKolam"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="id.web.devin.mvvmkolam"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name=".view.PembelianDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".view.CheckoutActivity"
             android:exported="false" />

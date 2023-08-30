@@ -17,9 +17,10 @@ import id.web.devin.mvvmkolam.model.Produk
 import org.json.JSONObject
 
 class CartViewModel(application: Application):AndroidViewModel(application){
+    val statusRemoveLD = MutableLiveData<Boolean?>()
     val statusLD = MutableLiveData<Boolean?>()
     val cartLD = MutableLiveData<ArrayList<Cart>>()
-    val produkCartLD = MutableLiveData<Cart>()
+    val cartDetailLD = MutableLiveData<Cart>()
     val loadingErrorLD = MutableLiveData<Boolean>()
     val loadingLD = MutableLiveData<Boolean>()
     private lateinit var result:ArrayList<Cart>
@@ -79,12 +80,12 @@ class CartViewModel(application: Application):AndroidViewModel(application){
         Response.Listener { response ->
             val sType = object : TypeToken<List<Cart>>(){ }.type
             Log.d("responCart", response)
-            if(response.isNullOrEmpty()){
-//                result = emp()
+            if(response.contains("error")){
+                cartLD.value = ArrayList()
             }else{
                 result = Gson().fromJson<ArrayList<Cart>>(response,sType)
+                cartLD.value = result
             }
-            cartLD.value = result
             loadingLD.value = false
         },
         Response.ErrorListener { error ->
@@ -102,20 +103,18 @@ class CartViewModel(application: Application):AndroidViewModel(application){
         queue?.add(stringReq)
     }
 
-    fun fetchProductCart(email:String){
+    fun fetchCartDetail(email:String, idKolam: String){
+        loadingErrorLD.value = false
+        loadingLD.value = true
+
         queue = Volley.newRequestQueue(getApplication())
-        Volley.newRequestQueue(getApplication())
-        val url = "https://lokowai.shop/cartlist.php"
+        val url = "https://lokowai.shop/cartdetail.php"
         val stringReq = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
-                val sType = object : TypeToken<List<Cart>>(){ }.type
-                Log.d("responCart", response)
-                if(response.isNullOrEmpty()){
-//                    result = emptyList()
-                }else{
-                    result = Gson().fromJson<ArrayList<Cart>>(response,sType)
-                }
-                cartLD.value = result
+                val sType = object : TypeToken<Cart>(){ }.type
+                val resultDetail = Gson().fromJson<Cart>(response,sType)
+                cartDetailLD.value = resultDetail
+
                 loadingLD.value = false
             },
             Response.ErrorListener { error ->
@@ -126,6 +125,7 @@ class CartViewModel(application: Application):AndroidViewModel(application){
             override fun getParams(): MutableMap<String, String>? {
                 val params = HashMap<String, String>()
                 params["email"] = email
+                params["idkolam"] = idKolam
                 return params
             }
         }
@@ -133,9 +133,73 @@ class CartViewModel(application: Application):AndroidViewModel(application){
         queue?.add(stringReq)
     }
 
-    fun updateQty(produk: Produk, qty:Int){
-
+    fun updateQty(qty: Int, idkeranjang: Int, idproduk: String){
+        queue = Volley.newRequestQueue(getApplication())
+        val url = "https://lokowai.shop/updatecart.php"
+        val stringReq = object  : StringRequest(Method.POST, url,
+            Response.Listener {
+                val data = JSONObject(it)
+                Log.d("dataUpdateCart", data.toString())
+                val status = data.getString("result")
+                if(status.equals("success")){
+                    statusLD.value = true
+                    Log.d("showSuccess",it.toString())
+                }else{
+                    statusLD.value = false
+                    Log.d("showError",it.toString())
+                }
+            },
+            Response.ErrorListener {
+                Toast.makeText(getApplication(),"Kesalahan Saat Mengakses Basis Data",Toast.LENGTH_SHORT).show()
+                Log.d("updateError", it.toString())
+            }){
+            override fun getParams(): MutableMap<String, String>? {
+                val params = HashMap<String, String>()
+                params["qty"] = qty.toString()
+                params["idkeranjang"] = idkeranjang.toString()
+                params["idproduk"] = idproduk
+                return params
+            }
+        }
+        stringReq.tag = TAG
+        queue?.add(stringReq)
     }
+
+    fun removeCart(idkeranjang:Int, idproduk: String){
+        queue = Volley.newRequestQueue(getApplication())
+        val url = "https://lokowai.shop/removecart.php"
+        val stringReq = object  : StringRequest(Method.POST, url,
+            Response.Listener {
+                Log.d("tes", it)
+                if(it.equals("[]")){
+                    statusRemoveLD.value = false
+                }else{
+                    statusRemoveLD.value = true
+                    val data = JSONObject(it)
+                    val status = data.getString("result")
+                    if(status.equals("success")){
+                        Log.d("showSuccess",it.toString())
+                    }else{
+                        Log.d("showError",it.toString())
+                    }
+                }
+            },
+            Response.ErrorListener {
+                Toast.makeText(getApplication(),"Kesalahan Saat Mengakses Basis Data",Toast.LENGTH_SHORT).show()
+                Log.d("removeError", it.toString())
+            }){
+            override fun getParams(): MutableMap<String, String>? {
+                val params = HashMap<String, String>()
+                params["id"] = idkeranjang.toString()
+                params["idproduk"] = idproduk
+                return params
+            }
+        }
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
+
+
 
     override fun onCleared() {
         super.onCleared()
