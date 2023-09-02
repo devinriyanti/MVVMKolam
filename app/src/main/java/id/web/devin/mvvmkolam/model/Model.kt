@@ -12,6 +12,7 @@ data class Pelatih(
     @SerializedName("mulai_karir")
     val tglKarir:String?,
     val deskripsi:String?,
+    val jenis_kelamin: String?,
     @SerializedName("gambar")
     val gambarUrl: String?
 )
@@ -52,7 +53,6 @@ data class Kolam(
     val nama: String?,
     val alamat: String?,
     val deskripsi: String?,
-    val email: String?,
     @SerializedName("gambar")
     val gambarUrl: String?,
     val is_maintenance: String?,
@@ -73,6 +73,7 @@ data class Pengguna(
     val telepon:String?,
     val jenis_kelamin:String?,
     val norekening: String?,
+    val nama_rekening:String?,
     @SerializedName("tanggal_lahir")
     val tglLahir: String?,
     @SerializedName("password")
@@ -93,8 +94,8 @@ data class Transaction(
     val produk: ArrayList<ProductTransaction>
 )
 data class UploadResponse(
-    val message: String,
-    val imageUrl: String
+    val result: String,
+    val message:String
 )
 
 data class ProductTransaction(

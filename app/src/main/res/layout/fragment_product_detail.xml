@@ -124,6 +124,7 @@
                             android:layout_marginBottom="8dp"
                             android:text="Tambahkan Ke Keranjang"
                             android:visibility="invisible"
+                            app:cornerRadius="8dp"
                             app:icon="@drawable/baseline_add_shopping_cart_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -169,6 +170,7 @@
                             android:layout_marginBottom="8dp"
                             android:text="Edit"
                             android:visibility="invisible"
+                            app:cornerRadius="8dp"
                             app:icon="@drawable/baseline_edit_24"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />
@@ -184,6 +186,7 @@
                             android:text="Hapus"
                             android:textColor="#7E2020"
                             android:visibility="invisible"
+                            app:cornerRadius="8dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/btnEditProdukDetail" />

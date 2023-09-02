@@ -259,4 +259,35 @@ class TransactionViewModel(application: Application):AndroidViewModel(applicatio
         queue?.add(stringReq)
     }
 
+    fun updateBuktiPembayaran(urlBukti:String, idtransaksi: String){
+        loadingLD.value = true
+        queue = Volley.newRequestQueue(getApplication())
+        val url = "https://lokowai.shop/uploadbuktitrf.php"
+        val stringReq = object  : StringRequest(Method.POST, url,
+            Response.Listener {
+                val data = JSONObject(it)
+                Log.d("dataUpdateTransaksi", data.toString())
+                val status = data.getString("result")
+                if(status.equals("success")){
+                    loadingLD.value = false
+                    Log.d("showSuccess",it.toString())
+                }else{
+                    Log.d("showError",it.toString())
+                }
+            },
+            Response.ErrorListener {
+                Toast.makeText(getApplication(),"Kesalahan Saat Mengakses Basis Data",Toast.LENGTH_SHORT).show()
+                Log.d("updateError", it.toString())
+            }){
+            override fun getParams(): MutableMap<String, String>? {
+                val params = HashMap<String, String>()
+                params["idtransaksi"] = idtransaksi
+                params["urlBukti"] = urlBukti
+                return params
+            }
+        }
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
+
 }

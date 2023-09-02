@@ -90,7 +90,7 @@ class ProfilEditFragment : Fragment() {
             picker?.show()
         }
 
-        b.btnBatalLogout.setOnClickListener {
+        b.btnBatalEditProfil.setOnClickListener {
             AlertDialog.Builder(context).apply {
                 val title = SpannableString("Peringatan")
                 title.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length, 0)

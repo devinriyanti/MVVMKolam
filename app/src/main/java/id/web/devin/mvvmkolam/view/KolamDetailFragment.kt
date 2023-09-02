@@ -46,7 +46,7 @@ class KolamDetailFragment : Fragment() {
 
         val viewPager = b.viewPagerTab
         val tabLayout = b.tabLayout
-        val tabTitles = listOf("Tiket", "Produk", "Pelatih")
+        val tabTitles = listOf("Produk", "Pelatih")
 
         //Setup ViewPager
         val adapter = MyPagerAdapter(childFragmentManager, lifecycle)

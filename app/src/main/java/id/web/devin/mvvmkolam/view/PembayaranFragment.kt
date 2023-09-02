@@ -29,6 +29,13 @@ import java.io.File
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import id.web.devin.mvvmkolam.util.Global
+import id.web.devin.mvvmkolam.util.SisaWaktu
+import id.web.devin.mvvmkolam.util.add24HoursToDateTime
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.time.LocalDateTime
 
 
 class PembayaranFragment : Fragment() {
@@ -41,7 +48,7 @@ class PembayaranFragment : Fragment() {
     private var idKolam:String? = null
     private var idtransaki:String? = null
     private lateinit var handler: Handler
-    private var remainingTimeMillis: Long = 23 * 60 * 60 * 1000 + 59 * 60 * 1000 + 59 * 1000 // Total waktu dalam milidetik
+    private var remainingTimeMillis: Long = 0
     private val updateIntervalMillis: Long = 1000
     private val imagePickRequestCode = 100
     private var selectedImageUri: Uri? = null
@@ -57,6 +64,7 @@ class PembayaranFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        b.progressBarUpload.visibility = View.GONE
         email = context?.let { Global.getEmail(it)}.toString()
         val sharedPreferences = requireActivity().getSharedPreferences("idkolam", Context.MODE_PRIVATE)
         val id = sharedPreferences.getString("id", null)
@@ -66,7 +74,6 @@ class PembayaranFragment : Fragment() {
 
         idKolam = id
         handler = Handler(Looper.getMainLooper())
-        startCountdown()
 
         val sharedPref = requireActivity().getSharedPreferences("totalPembelian", Context.MODE_PRIVATE)
         val total = sharedPref.getString("total", null)
@@ -118,7 +125,8 @@ class PembayaranFragment : Fragment() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openImagePicker()
             } else {
-                // Handle permission denied
+                val intent = Intent(context,PembayaranFragment::class.java)
+                startActivity(intent)
             }
         }
     }
@@ -127,12 +135,8 @@ class PembayaranFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == imagePickRequestCode && resultCode == Activity.RESULT_OK && data != null) {
             selectedImageUri = data.data
+            b.txtNamaBukti.text = "Terpilih"
         }
-    }
-
-    private fun openGallery() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, imagePickRequestCode)
     }
 
     private fun copyToClipboard(disalin: String) {
@@ -167,6 +171,13 @@ class PembayaranFragment : Fragment() {
     }
 
     private fun observeView() {
+        vMTransaksi.loadingLD.observe(viewLifecycleOwner, Observer {
+            if(it){
+                b.progressBarUpload.visibility = View.VISIBLE
+            }else{
+                b.progressBarUpload.visibility = View.GONE
+            }
+        })
         vMKolam.kolamLD.observe(viewLifecycleOwner, Observer {
             val emailAdmin = it.admin
             Log.d("emailadmin", it.admin.toString())
@@ -185,39 +196,42 @@ class PembayaranFragment : Fragment() {
         vMUpload.uploadResult.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
                 is UploadViewModel.Result.Success -> {
-                    val imageUrl = result.data.imageUrl
-                    // Handle success, maybe display the uploaded image or show a message
+                    val imageUrl = result.data.result
+                    Toast.makeText(context,"Berhasil Mengunggah Bukti",Toast.LENGTH_SHORT).show()
+                    Log.d("succes", imageUrl)
                 }
                 is UploadViewModel.Result.Error -> {
                     val errorMessage = result.exception.message
-                    // Handle error, show an error message to the user
+                    Log.d("error", errorMessage.toString())
                 }
+                else -> {}
             }
         })
-        vMTransaksi.transaksiDetailLD.observe(viewLifecycleOwner, Observer {
-            b.imgUploadBukti.setOnClickListener {
-                selectedImageUri?.let { uri ->
-//                val inputStream = requireContext().contentResolver.openInputStream(uri)
-//                val imageFile = File(requireContext().cacheDir, "temp_image.jpg")
-//                inputStream?.use { input ->
-//                    imageFile.outputStream().use { output ->
-//                        input.copyTo(output)
-//                    }
-//                }
-//                val requestFile = imageFile.asRequestBody("image/jpeg".toMediaTypeOrNull())
-//                val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
-//                vMUpload.uploadImage(imagePart)
-                    //masih belum berhasil
-                    val inputStream = requireContext().contentResolver.openInputStream(uri)
-                    val outputFile = File(requireContext().filesDir, "B${it.id}.jpg")
-                    inputStream?.use { input ->
-                        outputFile.outputStream().use { output ->
-                            input.copyTo(output)
-                        }
+        vMTransaksi.transaksiDetailLD.observe(viewLifecycleOwner, Observer {trx->
+            b.btnUploadBukti.setOnClickListener {
+                if (selectedImageUri != null){
+                    // Dapatkan path file dari Uri
+                    val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+                    val cursor = requireContext().contentResolver.query(selectedImageUri!!, filePathColumn, null, null, null)
+
+                    if (cursor != null) {
+                        cursor.moveToFirst()
+                        val columnIndex = cursor.getColumnIndex(filePathColumn[0])
+                        val imagePath = cursor.getString(columnIndex)
+                        cursor.close()
+                        val file = File(imagePath)
+                        val requestBody = RequestBody.create("application/octet-stream".toMediaTypeOrNull(), file)
+                        val imagePart = MultipartBody.Part.createFormData("image", "B${trx.id}.jpg", requestBody)
+                        val url = "https://lokowai.shop/image/bukti/B${trx.id}.jpg"
+                        vMUpload.uploadImage(imagePart)
+                        vMTransaksi.updateBuktiPembayaran(url,trx.id)
                     }
-                    Toast.makeText(context,"Berhasil Mengunggah Bukti",Toast.LENGTH_SHORT).show()
                 }
             }
+            remainingTimeMillis =  SisaWaktu(trx.produk[0].tanggal)
+            Log.d("waktu",trx.produk[0].tanggal)
+            Log.d("24jam", add24HoursToDateTime(trx.produk[0].tanggal))
+            startCountdown()
         })
     }
 

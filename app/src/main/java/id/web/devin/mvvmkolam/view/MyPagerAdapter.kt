@@ -7,7 +7,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class MyPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle):FragmentStateAdapter(fragmentManager,lifecycle) {
     private val fragmentList = listOf(
-        TiketListFragment(),
         ProductListFragment(),
         PelatihListFragment()
     )

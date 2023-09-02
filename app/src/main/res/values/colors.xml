@@ -9,7 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="abu_muda">#FFDCDCDC</color>
     <color name="biru_muda">#B0DAFF</color>
-    <color name="biru_tua">#146C94</color>
+    <color name="biru_tua">#1D5B79</color>
     <color name="kuning_pastel">#F1C27B</color>
     <color name="orange">#F99B7D</color>
     <color name="hitam_muda">#394867</color>
@@ -17,4 +17,7 @@
     <color name="abu">#9BA4B5</color>
     <color name="background">#DCDCDC</color>
     <color name="red">#FF7E2020</color>
+    <color name="maroon">#A73121</color>
+    <color name="maroon_muda">#E25E3E</color>
+    <color name="hijau">#5C8374</color>
 </resources>

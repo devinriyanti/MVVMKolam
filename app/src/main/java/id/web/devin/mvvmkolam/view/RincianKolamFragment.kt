@@ -36,7 +36,6 @@ class RincianKolamFragment : Fragment() {
         viewModel.fetchData(id.toString())
 
         observeView()
-
     }
 
     private fun observeView() {

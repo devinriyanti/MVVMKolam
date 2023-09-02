@@ -9,10 +9,21 @@ import android.widget.ProgressBar
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import id.web.devin.mvvmkolam.R
+import id.web.devin.mvvmkolam.model.ShippingCostRequest
+import id.web.devin.mvvmkolam.model.ShippingResponse
+import id.web.devin.mvvmkolam.model.UploadResponse
+import okhttp3.MultipartBody
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
 import java.lang.Exception
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.text.NumberFormat
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.Period
@@ -35,6 +46,43 @@ fun ImageView.loadImage(url:String, progressBar: ProgressBar){
                 progressBar.visibility = View.GONE
             }
         })
+}
+fun calculateTimeDifference(targetDateTime: LocalDateTime): Duration {
+    val currentDateTime = LocalDateTime.now()
+    return Duration.between(currentDateTime, targetDateTime)
+}
+fun SisaWaktu(tanggal:String):Long{
+    val targetDateTimeString = add24HoursToDateTime(tanggal)
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val targetDateTime = LocalDateTime.parse(targetDateTimeString, formatter)
+
+    // Hitung sisa waktu
+    val timeDifference = calculateTimeDifference(targetDateTime)
+
+    // Output sisa waktu dalam format jam, menit, dan detik
+    val hours = timeDifference.toHours()
+    val minutes = (timeDifference.toMinutes() % 60).toInt()
+    val seconds = (timeDifference.seconds % 60).toInt()
+    var milidetik = hours * 60 * 60 * 1000 + minutes * 60 * 1000 + seconds * 1000
+
+    return milidetik
+}
+
+fun add24HoursToDateTime(inputDateTime: String): String {
+    // Tentukan format tanggal dan waktu yang sesuai
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+    // Parse inputDateTime menjadi objek Date
+    val date = inputFormat.parse(inputDateTime)
+
+    // Tambahkan 24 jam ke objek Date
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    calendar.add(Calendar.HOUR_OF_DAY, 24)
+
+    // Format kembali objek Date ke string
+    val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    return outputFormat.format(calendar.time)
 }
 
 fun formatCurrency(amount: Double): String {
@@ -93,6 +141,17 @@ object EncryptionUtils{
         val digest = MessageDigest.getInstance("SHA-256")
         return digest.digest(secretKey.toByteArray(StandardCharsets.UTF_8))
     }
+}
+
+interface RajaOngkirService {
+    @POST("cost")
+    suspend fun calculateShippingCosts(@Body request: ShippingCostRequest): Response<ShippingResponse>
+}
+
+interface UploadService {
+    @Multipart
+    @POST("uploadbukti.php")
+    fun uploadImage(@Part image: MultipartBody.Part): Call<UploadResponse>
 }
 
 object Global {
