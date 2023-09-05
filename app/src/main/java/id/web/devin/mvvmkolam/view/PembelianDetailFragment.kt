@@ -100,7 +100,7 @@ class PembelianDetailFragment : Fragment() {
         }
 
         b.btnBatalkanPesanan.setOnClickListener {
-//            vMTransaksi.updateStatus(idtrx,StatusTransaksi.Dibatalkan.name)
+            vMTransaksi.updateStatus(idtrx,StatusTransaksi.Dibatalkan.name)
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
         }
@@ -121,23 +121,14 @@ class PembelianDetailFragment : Fragment() {
     }
 
     private fun observeView() {
-        viewModel.shippingCosts.observe(viewLifecycleOwner, Observer {result->
-            when(result){
-                is ShippingViewModel.Result.Success->{
-                    result.data.forEach {
-                        it.rajaongkir.results.forEach {
-                            var ongkir =  it.costs[0].cost[0].value
-                            val jasaKirim = it.name
-                            val layanan = it.costs[0].service
-                            pengiriman = ongkir
-                            b.txtJasaPengiriman.text = "$jasaKirim ($layanan)"
-                            b.txtBiayaOngkir.text = formatCurrency(ongkir.toDouble())
-                        }
-                    }
-                }
-                is ShippingViewModel.Result.Error->{
-                    Log.d("eror",result.message)
-                }
+        viewModel.shippingCosts.observe(viewLifecycleOwner, Observer {
+            it.rajaongkir.results.forEach {
+                var ongkir =  it.costs[0].cost[0].value
+                val jasaKirim = it.name
+                val layanan = it.costs[0].service
+                pengiriman = ongkir
+                b.txtJasaPengiriman.text = "$jasaKirim ($layanan)"
+                b.txtBiayaOngkir.text = formatCurrency(ongkir.toDouble())
             }
         })
         vMPengguna.userLD.observe(viewLifecycleOwner, Observer {
@@ -147,6 +138,7 @@ class PembelianDetailFragment : Fragment() {
             alamat = it.alamat.toString()
             viewModel.fetchShippingCosts(asal,tujuan,totalBerat)
         })
+
         vMTransaksi.transaksiDetailLD.observe(viewLifecycleOwner, Observer {transaksi->
             if(transaksi.status.toString() == StatusTransaksi.Dikirim.name || transaksi.status.toString() == StatusTransaksi.Diterima.name || transaksi.status.toString() == StatusTransaksi.Dibatalkan.name){
                 b.btnBayarSekarang.visibility = View.GONE
@@ -240,6 +232,7 @@ class PembelianDetailFragment : Fragment() {
 
 
             }
+
             viewModel.fetchShippingCosts(asal,tujuan,totalBerat)
         })
     }

@@ -1,11 +1,9 @@
 package id.web.devin.mvvmkolam.view
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.databinding.CheckoutItemBinding
-import id.web.devin.mvvmkolam.model.Cart
 import id.web.devin.mvvmkolam.model.ProdukCart
 import id.web.devin.mvvmkolam.util.formatCurrency
 import id.web.devin.mvvmkolam.util.loadImage

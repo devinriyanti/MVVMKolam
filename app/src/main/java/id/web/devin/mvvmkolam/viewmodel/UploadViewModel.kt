@@ -37,9 +37,8 @@ class UploadViewModel (application: Application): AndroidViewModel(application){
     private val _uploadResult = MutableLiveData<Result<UploadResponse>>()
     val uploadResult: LiveData<Result<UploadResponse>> = _uploadResult
 
-    fun uploadImage(imageFile: MultipartBody.Part) {
-
-        val call: Call<UploadResponse> = uploadService.uploadImage(imageFile)
+    fun uploadImage(imageFile: MultipartBody.Part, folder:RequestBody) {
+        val call: Call<UploadResponse> = uploadService.uploadImage(imageFile, folder)
         call.enqueue(object : Callback<UploadResponse> {
             override fun onResponse(call: Call<UploadResponse>, response: Response<UploadResponse>) {
                 Log.d("respon", response.toString())
@@ -55,7 +54,6 @@ class UploadViewModel (application: Application): AndroidViewModel(application){
                     _uploadResult.postValue(Result.Error(Exception("Upload Failed")))
                 }
             }
-
             override fun onFailure(call: Call<UploadResponse>, t: Throwable) {
                 _uploadResult.postValue(Result.Error(t as Exception))
             }

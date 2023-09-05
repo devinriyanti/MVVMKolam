@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -44,8 +45,10 @@ class HomeListFragment : Fragment() {
 
     fun observeViewModel(){
         vM.userLD.observe(viewLifecycleOwner, Observer {
+            var cari = ""
             if (it.role == Role.Admin){
                 viewModel.refreshAdmin(email,it.role.toString())
+                b.txtPencarianKolamHome.visibility = View.GONE
                 b.fabTambahKolam.visibility = View.VISIBLE
 
                 b.fabTambahKolam.setOnClickListener {
@@ -53,7 +56,16 @@ class HomeListFragment : Fragment() {
                     Navigation.findNavController(it).navigate(action)
                 }
             }else{
-                viewModel.refresh()
+                b.txtPencarianKolam.addTextChangedListener {
+                    cari = b.txtPencarianKolam.text.toString()
+                    if(cari != ""){
+                        cari = cari
+                    }else{
+                        cari = ""
+                    }
+                    viewModel.refresh(cari)
+                }
+                viewModel.refresh(cari)
                 b.fabTambahKolam.visibility = View.GONE
             }
 
@@ -66,10 +78,21 @@ class HomeListFragment : Fragment() {
                 b.txtError.visibility = View.GONE
                 b.txtKolamTersedia.visibility = View.GONE
                 b.progressLoad.visibility = View.VISIBLE
+                var cari = ""
                 if (it.role == Role.Admin){
                     viewModel.refreshAdmin(email,it.role.toString())
+                    b.txtPencarianKolamHome.visibility = View.GONE
                 }else{
-                    viewModel.refresh()
+                    b.txtPencarianKolam.addTextChangedListener {
+                        cari = b.txtPencarianKolam.text.toString()
+                        if(cari != ""){
+                            cari = cari
+                        }else{
+                            cari = ""
+                        }
+                        viewModel.refresh(cari)
+                    }
+                    viewModel.refresh(cari)
                 }
                 b.refreshLayout.isRefreshing = false
             }

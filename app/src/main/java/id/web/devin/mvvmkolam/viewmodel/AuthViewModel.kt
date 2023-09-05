@@ -57,9 +57,11 @@ class AuthViewModel(application: Application):AndroidViewModel(application) {
     fun registerUser(
         nama: String,
         email: String,
+        alamat:String,
         noTelp: String,
         pwd: String,
-        role: String
+        role: String,
+        idkota:String
     ){
         queue = Volley.newRequestQueue(getApplication())
         val url = "https://lokowai.shop/registrasi.php"
@@ -84,9 +86,59 @@ class AuthViewModel(application: Application):AndroidViewModel(application) {
                 val params = HashMap<String, String>()
                 params["nama"] = nama
                 params["email"] = email
+                params["alamat"] = alamat
                 params["telepon"] = noTelp
                 params["password"] = pwd
                 params["role"] = role
+                params["idkota"] = idkota
+                return params
+            }
+        }
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
+
+    fun registerAdmin(
+        nama: String,
+        email: String,
+        alamat:String,
+        norekening:String,
+        namarekening:String,
+        noTelp: String,
+        pwd: String,
+        role: String,
+        idkota:String
+    ){
+        queue = Volley.newRequestQueue(getApplication())
+        val url = "https://lokowai.shop/registrasiadmin.php"
+        val stringReq = object : StringRequest(Method.POST, url,
+            Response.Listener{ response ->
+                var data = JSONObject(response)
+                var status = data.getString("result")
+                if(status.equals("success")){
+                    statusLD.value = true
+                    Log.d("showvolley", response.toString())
+                }else{
+                    statusLD.value = false
+                    Log.d("showError", response.toString())
+                }
+            },
+            Response.ErrorListener { error ->
+                // Menangani kesalahan
+                Toast.makeText(getApplication(),"Kesalahan Saat Mengakses Basis Data",Toast.LENGTH_SHORT).show()
+                Log.d("showvolley", error.toString())
+            }) {
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["nama"] = nama
+                params["email"] = email
+                params["alamat"] = alamat
+                params["norekening"] = norekening
+                params["nama_rekening"] = namarekening
+                params["telepon"] = noTelp
+                params["password"] = pwd
+                params["role"] = role
+                params["idkota"] = idkota
                 return params
             }
         }

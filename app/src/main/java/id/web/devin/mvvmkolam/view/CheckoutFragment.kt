@@ -73,28 +73,19 @@ class CheckoutFragment : Fragment() {
     }
 
     private fun observeView() {
-        vMShipping.shippingCosts.observe(viewLifecycleOwner, Observer {result->
-            when(result){
-                is ShippingViewModel.Result.Success->{
-                    result.data.forEach {
-                        it.rajaongkir.results.forEach {
-                            var ongkir =  it.costs[0].cost[0].value
-                            val jasaKirim = it.name
-                            val layanan = it.costs[0].service
-                            val estimasi = it.costs[0].cost[0].etd
-                            pengiriman = ongkir
-                            b.txtJasaKirim.text = jasaKirim
-                            b.txtLayananPengiriman.text = layanan
-                            b.txtEstimasiPengiriman.text = "$estimasi Hari"
-                            b.txtTotalPengirimanCO.text = formatCurrency(ongkir.toDouble())
+        vMShipping.shippingCosts.observe(viewLifecycleOwner, Observer {
+            it.rajaongkir.results.forEach {
+                var ongkir =  it.costs[0].cost[0].value
+                val jasaKirim = it.name
+                val layanan = it.costs[0].service
+                val estimasi = it.costs[0].cost[0].etd
+                pengiriman = ongkir
+                b.txtJasaKirim.text = jasaKirim
+                b.txtLayananPengiriman.text = layanan
+                b.txtEstimasiPengiriman.text = "$estimasi Hari"
+                b.txtTotalPengirimanCO.text = formatCurrency(ongkir.toDouble())
 
-                            updateTotal()
-                        }
-                    }
-                }
-                is ShippingViewModel.Result.Error->{
-                    Log.d("eror",result.message)
-                }
+                updateTotal()
             }
         })
 
@@ -104,7 +95,7 @@ class CheckoutFragment : Fragment() {
             b.txtTeleponCO.text = it.telepon
             tujuan = it.idkota
             alamat = it.alamat.toString()
-            Log.d("tujuan", it.idkota.toString())
+            Log.d("tujuan", it.idkota)
             updateTotal()
             vMShipping.fetchShippingCosts(asal,tujuan,totalBerat)
         })
@@ -133,7 +124,7 @@ class CheckoutFragment : Fragment() {
             vMShipping.fetchShippingCosts(asal,tujuan,totalBerat)
         })
         vMShipping.loadingLD.observe(viewLifecycleOwner, Observer {
-            if(it){
+            if(it == true){
                 b.progressCheckout.visibility = View.VISIBLE
                 b.cardAlamatCO.visibility = View.GONE
                 b.cardProdukCO.visibility = View.GONE

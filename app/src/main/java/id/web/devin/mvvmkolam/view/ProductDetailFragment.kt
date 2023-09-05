@@ -1,7 +1,11 @@
 package id.web.devin.mvvmkolam.view
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.Layout
+import android.text.SpannableString
+import android.text.style.AlignmentSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,6 +16,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.FragmentProductDetailBinding
 import id.web.devin.mvvmkolam.model.Role
@@ -30,6 +36,7 @@ class ProductDetailFragment : Fragment() {
     private val cartViewModel: CartViewModel by viewModels()
     private var email:String? = null
     private var role:String? = null
+    private var produkID:String? = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,10 +52,40 @@ class ProductDetailFragment : Fragment() {
         email = context?.let { Global.getEmail(it) }.toString()
         role = context?.let { Global.getRole(it) }.toString()
         if(arguments != null){
-            val produkID = ProductDetailFragmentArgs.fromBundle(requireArguments()).produkID
+            produkID = ProductDetailFragmentArgs.fromBundle(requireArguments()).produkID
             viewModel = ViewModelProvider(this).get(ProductListViewModel::class.java)
-            viewModel.refresh(produkID)
+            viewModel.refresh(produkID.toString())
             observeModel()
+
+            b.btnEditProdukDetail.setOnClickListener {
+                val action = ProductDetailFragmentDirections.actionProductEditFragment(produkID.toString())
+                Navigation.findNavController(it).navigate(action)
+            }
+
+            b.btnHapusProdukDetail.setOnClickListener {
+                AlertDialog.Builder(context).apply {
+                    val title = SpannableString("Peringatan")
+                    title.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length, 0)
+                    val message = SpannableString("Anda yakin ingin menghapus data produk?")
+                    message.setSpan(
+                        AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0,
+                        message.length,
+                        0
+                    )
+                    setTitle(title)
+                    setMessage(message)
+                    setPositiveButton("Ya"){ dialog,_->
+                        viewModel.removeProduk(produkID.toString())
+                        val action = ProductDetailFragmentDirections.actionProdukDetailToDetailKolamFragment()
+                        findNavController().navigate(action)
+                    }
+                    setNegativeButton("Tidak"){ dialog,_->
+                        dialog.dismiss()
+                    }
+                    create().show()
+                }
+            }
         }
     }
 

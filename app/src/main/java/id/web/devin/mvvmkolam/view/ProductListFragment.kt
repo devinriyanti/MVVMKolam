@@ -11,9 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.FragmentProductListBinding
+import id.web.devin.mvvmkolam.model.Role
+import id.web.devin.mvvmkolam.util.Global
 import id.web.devin.mvvmkolam.viewmodel.DetailKolamViewModel
 import id.web.devin.mvvmkolam.viewmodel.ProductListViewModel
 
@@ -34,11 +37,21 @@ class ProductListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val role = context?.let { Global.getRole(it) }
         b.txtErorProduk.visibility = View.GONE
         val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
         val id = sharedPreferences.getString("id", null)
         viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
         viewModel.fetchData(id.toString())
+
+        if(role == Role.Admin.name){
+            b.fabTambahProduk.visibility = View.VISIBLE
+
+            b.fabTambahProduk.setOnClickListener{
+                val action = KolamDetailFragmentDirections.actionProductAddFragment()
+                Navigation.findNavController(it).navigate(action)
+            }
+        }
 
         b.recViewProduct.layoutManager = GridLayoutManager(context, 2)
         b.recViewProduct.adapter = productListAdapter

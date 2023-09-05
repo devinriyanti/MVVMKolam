@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.HomeListItemBinding
 import id.web.devin.mvvmkolam.model.Kolam
+import id.web.devin.mvvmkolam.model.Role
+import id.web.devin.mvvmkolam.util.Global
 import id.web.devin.mvvmkolam.util.loadImage
 
 class KolamListAdapter(private val context: Context,val kolamList:ArrayList<Kolam>):RecyclerView.Adapter<KolamListAdapter.KolamViewHolder>() {
@@ -60,6 +62,17 @@ class KolamListAdapter(private val context: Context,val kolamList:ArrayList<Kola
                 txtStatus.setText("Tutup")
                 txtStatus.setTextColor(Color.RED)
                 imageKolam.colorFilter= colorFilter
+                val role = Global.getRole(context)
+                if(role == Role.Admin.name){
+                    cardListKolam.setOnClickListener {
+                        var intent = Intent(holder.itemView.context, KolamDetailActivity::class.java)
+                        holder.itemView.context.startActivity(intent)
+                        val sharedPreferences = context.getSharedPreferences("kolam", Context.MODE_PRIVATE)
+                        val editor = sharedPreferences.edit()
+                        editor.putString("id", kolam.id.toString())
+                        editor.apply()
+                    }
+                }
             }
         }
     }

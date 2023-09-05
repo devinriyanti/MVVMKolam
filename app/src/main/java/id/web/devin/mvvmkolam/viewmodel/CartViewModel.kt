@@ -199,8 +199,6 @@ class CartViewModel(application: Application):AndroidViewModel(application){
         queue?.add(stringReq)
     }
 
-
-
     override fun onCleared() {
         super.onCleared()
         queue?.cancelAll(TAG)

@@ -1,7 +1,21 @@
 package id.web.devin.mvvmkolam.model
 
-import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+
+data class Provinsi(
+    val idprovinsi:Int,
+    val nama:String,
+    val kota:ArrayList<Kota>
+)
+
+data class Kota (
+    val idkota:Int,
+    @SerializedName("nama_kota")
+    val nama: String,
+    @SerializedName("type")
+    val tipe:String,
+    val kode_pos:String
+)
 
 data class Pelatih(
     val id:String?,

@@ -2,6 +2,7 @@ package id.web.devin.mvvmkolam.view
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -12,6 +13,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.text.Layout
+import android.text.SpannableString
+import android.text.style.AlignmentSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -78,7 +82,7 @@ class PembayaranFragment : Fragment() {
         val sharedPref = requireActivity().getSharedPreferences("totalPembelian", Context.MODE_PRIVATE)
         val total = sharedPref.getString("total", null)
         val totalBayar = total
-
+        Log.d("testt", "$idtransaki, $idKolam, $totalBayar")
         b.txtTotalPembayaranPem.text = formatCurrency(totalBayar!!.toDouble())
 
         b.btnOK.setOnClickListener {
@@ -186,6 +190,7 @@ class PembayaranFragment : Fragment() {
 
         vMPengguna.userLD.observe(viewLifecycleOwner, Observer {user->
             b.txtNomorRekening.text = user.norekening
+            b.txtNamaRekening.text = user.nama_rekening
             Log.d("rekening", user.norekening.toString())
             b.salinButton.setOnClickListener {
                 val disalin = user.norekening
@@ -223,8 +228,24 @@ class PembayaranFragment : Fragment() {
                         val requestBody = RequestBody.create("application/octet-stream".toMediaTypeOrNull(), file)
                         val imagePart = MultipartBody.Part.createFormData("image", "B${trx.id}.jpg", requestBody)
                         val url = "https://lokowai.shop/image/bukti/B${trx.id}.jpg"
-                        vMUpload.uploadImage(imagePart)
+                        val folderValue = "bukti"
+                        val folderRequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), folderValue)
+                        vMUpload.uploadImage(imagePart,folderRequestBody)
                         vMTransaksi.updateBuktiPembayaran(url,trx.id)
+                    }
+
+                }else{
+                    AlertDialog.Builder(context).apply {
+                        val message = SpannableString("Anda belum memilih foto")
+                        message.setSpan(
+                            AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                            0,
+                            message.length,
+                            0
+                        )
+                        setMessage(message)
+                        setPositiveButton("OK", null)
+                        create().show()
                     }
                 }
             }

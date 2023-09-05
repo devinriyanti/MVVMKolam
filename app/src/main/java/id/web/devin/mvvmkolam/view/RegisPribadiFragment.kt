@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.FragmentRegisPribadiBinding
+import id.web.devin.mvvmkolam.model.Role
 import id.web.devin.mvvmkolam.util.EncryptionUtils
 import id.web.devin.mvvmkolam.viewmodel.AuthViewModel
 
@@ -26,6 +27,7 @@ class RegisPribadiFragment : Fragment() {
     private lateinit var nama:String
     private lateinit var email:String
     private lateinit var telepon:String
+    private lateinit var alamat:String
     private lateinit var pwd:String
     private lateinit var pwdKonfirmasi:String
     private lateinit var role:String
@@ -41,27 +43,45 @@ class RegisPribadiFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
-        b.btnDaftarPribadi.setOnClickListener {
-            nama = b.txtNamaPribadi.text.toString()
-            email = b.txtEmailPribadi.text.toString()
-            pwd = b.txtKSPribadi.text.toString()
-            val encryptPwd = EncryptionUtils.encrypt(pwd)
-            pwdKonfirmasi = b.txtKonKSPribadi.text.toString()
-            telepon = b.txtNoTeleponPribadi.text.toString()
-            role = "Pengguna"
-            viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+        if(arguments != null){
+            val idkota = RegisPribadiFragmentArgs.fromBundle(requireArguments()).idkota
 
-            if(nama.isNotEmpty() && email.isNotEmpty() && pwd.isNotEmpty() && telepon.isNotEmpty() && pwdKonfirmasi.isNotEmpty()){
-                if(pwd.equals(pwdKonfirmasi)){
-                    if(pwd.length >= 4 && pwd.length <=8){
-                        viewModel.registerUser(nama, email, telepon, encryptPwd, role)
-                        observeView()
+            b.btnDaftarPribadi.setOnClickListener {
+                nama = b.txtNamaPribadi.text.toString()
+                email = b.txtEmailPribadi.text.toString()
+                pwd = b.txtKSPribadi.text.toString()
+                val encryptPwd = EncryptionUtils.encrypt(pwd)
+                pwdKonfirmasi = b.txtKonKSPribadi.text.toString()
+                telepon = b.txtNoTeleponPribadi.text.toString()
+                alamat = b.txtAlamatPribadi.text.toString()
+                role = "Pengguna"
+                viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
+
+                if(nama.isNotEmpty() && email.isNotEmpty() && pwd.isNotEmpty() && telepon.isNotEmpty() && pwdKonfirmasi.isNotEmpty()&& alamat.isNotEmpty()){
+                    if(pwd.equals(pwdKonfirmasi)){
+                        if(pwd.length >= 4 && pwd.length <=8){
+                            viewModel.registerUser(nama, email, alamat ,telepon, encryptPwd, role, idkota.toString())
+                            observeView()
+                        }else{
+                            Toast.makeText(context, "Kata Sandi Harus Mengandung 4-8 Karakter!", Toast.LENGTH_SHORT).show()
+                        }
                     }else{
-                        Toast.makeText(context, "Kata Sandi Harus Mengandung 4-8 Karakter!", Toast.LENGTH_SHORT).show()
+                        AlertDialog.Builder(context).apply {
+                            val message = SpannableString("Kata Sandi Tidak Cocok Dengan Konfimasi Kata Sandi")
+                            message.setSpan(
+                                AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                                0,
+                                message.length,
+                                0
+                            )
+                            setMessage(message)
+                            setPositiveButton("OK", null)
+                            create().show()
+                        }
                     }
                 }else{
                     AlertDialog.Builder(context).apply {
-                        val message = SpannableString("Kata Sandi Tidak Cocok Dengan Konfimasi Kata Sandi")
+                        val message = SpannableString("Data Tidak Boleh Kosong!")
                         message.setSpan(
                             AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
                             0,
@@ -85,7 +105,7 @@ class RegisPribadiFragment : Fragment() {
     private fun observeView() {
         viewModel.statusLD.observe(viewLifecycleOwner, Observer {
             if(it == true){
-                Log.d("LOGINTES","ANJAY")
+                Log.d("LOGINTES","Masuk")
                 AlertDialog.Builder(context).apply {
                     val message = SpannableString("Berhasil Melakukan Registrasi")
                     message.setSpan(

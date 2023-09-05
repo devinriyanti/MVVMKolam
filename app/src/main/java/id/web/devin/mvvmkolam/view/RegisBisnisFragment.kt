@@ -26,6 +26,9 @@ class RegisBisnisFragment : Fragment() {
     private lateinit var nama:String
     private lateinit var email:String
     private lateinit var telepon:String
+    private lateinit var alamat:String
+    private lateinit var norekening:String
+    private lateinit var namarekening:String
     private lateinit var pwd:String
     private lateinit var pwdKonfirmasi:String
     private lateinit var role:String
@@ -44,16 +47,20 @@ class RegisBisnisFragment : Fragment() {
             nama = b.txtNamaBisnis.text.toString()
             email = b.txtEmailBisnis.text.toString()
             pwd = b.txtKSBisnis.text.toString()
+            alamat = b.txtAlamatBisnis.text.toString()
+            norekening = b.txtNoRekeningBisnis.text.toString()
+            namarekening = b.txtNamaRekeningBisnis.text.toString().toUpperCase()
             val encryptPwd = EncryptionUtils.encrypt(pwd)
             pwdKonfirmasi = b.txtKonKSBisnis.text.toString()
             telepon = b.txtNoTeleponBisnis.text.toString()
+            val idkota = "444"
             role = "Admin"
             viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
 
-            if(nama.isNotEmpty() && email.isNotEmpty() && pwd.isNotEmpty() && telepon.isNotEmpty() && pwdKonfirmasi.isNotEmpty()){
+            if(nama.isNotEmpty() && email.isNotEmpty() && pwd.isNotEmpty() && telepon.isNotEmpty() && pwdKonfirmasi.isNotEmpty() && alamat.isNotEmpty() && norekening.isNotEmpty() && namarekening.isNotEmpty()){
                 if(pwd.equals(pwdKonfirmasi)){
                     if(pwd.length >= 4 && pwd.length <=8){
-                        viewModel.registerUser(nama, email, telepon, encryptPwd, role)
+                        viewModel.registerAdmin(nama, email, alamat, norekening, namarekening, telepon, encryptPwd, role, idkota)
                         observeView()
                     }else{
                         Toast.makeText(context, "Kata Sandi Harus Menggunakan 4-8 Karakter!", Toast.LENGTH_SHORT).show()
@@ -71,6 +78,19 @@ class RegisBisnisFragment : Fragment() {
                         setPositiveButton("OK", null)
                         create().show()
                     }
+                }
+            }else{
+                AlertDialog.Builder(context).apply {
+                    val message = SpannableString("Data Tidak Boleh Kosong!")
+                    message.setSpan(
+                        AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0,
+                        message.length,
+                        0
+                    )
+                    setMessage(message)
+                    setPositiveButton("OK", null)
+                    create().show()
                 }
             }
         }

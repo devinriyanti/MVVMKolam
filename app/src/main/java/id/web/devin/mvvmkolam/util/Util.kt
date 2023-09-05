@@ -13,12 +13,9 @@ import id.web.devin.mvvmkolam.model.ShippingCostRequest
 import id.web.devin.mvvmkolam.model.ShippingResponse
 import id.web.devin.mvvmkolam.model.UploadResponse
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
+import retrofit2.http.*
 import java.lang.Exception
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -145,13 +142,13 @@ object EncryptionUtils{
 
 interface RajaOngkirService {
     @POST("cost")
-    suspend fun calculateShippingCosts(@Body request: ShippingCostRequest): Response<ShippingResponse>
+    fun calculateShippingCosts(@Body request: ShippingCostRequest): Call<ShippingResponse>
 }
 
 interface UploadService {
     @Multipart
-    @POST("uploadbukti.php")
-    fun uploadImage(@Part image: MultipartBody.Part): Call<UploadResponse>
+    @POST("uploadgambar.php")
+    fun uploadImage(@Part image: MultipartBody.Part, @Part("folder") folder: RequestBody): Call<UploadResponse>
 }
 
 object Global {

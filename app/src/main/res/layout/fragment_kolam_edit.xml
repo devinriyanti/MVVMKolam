@@ -24,24 +24,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout10"
-            style="?attr/textInputOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="GAMBAR"
-            app:layout_constraintEnd_toEndOf="@+id/textInputLayout15"
-            app:layout_constraintStart_toStartOf="@+id/textInputLayout15"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout15">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextBeratEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/baseline_add_24" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout11"
             style="?attr/textInputOutlinedStyle"
             android:layout_width="0dp"
@@ -49,6 +31,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
+            android:hint="Nama"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3">
@@ -57,8 +40,7 @@
                 android:id="@+id/editTextNamaKolamEdit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/ic_baseline_assignment_ind_24"
-                android:hint="NAMA" />
+                android:drawableEnd="@drawable/ic_baseline_assignment_ind_24" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -67,7 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="ALAMAT"
+            android:hint="Alamat"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout11"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout11"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout11">
@@ -85,7 +67,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:hint="DESKRIPSI"
+            android:hint="Deskripsi"
             app:layout_constraintEnd_toEndOf="@+id/textInputLayout12"
             app:layout_constraintStart_toStartOf="@+id/textInputLayout12"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout12">
@@ -98,62 +80,44 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout14"
-            style="?attr/textInputOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="EMAIL"
-            app:layout_constraintEnd_toEndOf="@+id/textInputLayout13"
-            app:layout_constraintStart_toStartOf="@+id/textInputLayout13"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout13">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextEmailKolamEdit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/baseline_alternate_email_24"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout15"
             style="?attr/textInputOutlinedStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/textInputLayout14"
-            app:layout_constraintStart_toStartOf="@+id/textInputLayout14"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout14">
+            android:hint="URL Lokasi"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayout13"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout13"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout13">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextLokasiKolamEDit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/baseline_location_on_24"
-                android:hint="URL LOKASI" />
+                android:drawableEnd="@drawable/baseline_location_on_24" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnEditKolam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:text="Simpan"
             app:icon="@drawable/baseline_save_24"
+            app:layout_constraintBottom_toTopOf="@+id/btnBatalEditKolam"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout10" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btnBatalEditKolam"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:text="Batal"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/btnEditKolam"
-            app:layout_constraintStart_toStartOf="@+id/btnEditKolam"
-            app:layout_constraintTop_toBottomOf="@+id/btnEditKolam" />
+            app:layout_constraintStart_toStartOf="@+id/btnEditKolam" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

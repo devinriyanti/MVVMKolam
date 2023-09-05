@@ -1,23 +1,35 @@
 package id.web.devin.mvvmkolam.view
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.text.Layout
+import android.text.SpannableString
+import android.text.style.AlignmentSpan
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.FragmentRincianKolamBinding
+import id.web.devin.mvvmkolam.model.Role
+import id.web.devin.mvvmkolam.util.Global
 import id.web.devin.mvvmkolam.util.loadImage
 import id.web.devin.mvvmkolam.viewmodel.DetailKolamViewModel
+import id.web.devin.mvvmkolam.viewmodel.KolamListViewModel
 
 class RincianKolamFragment : Fragment() {
     private lateinit var b:FragmentRincianKolamBinding
     private lateinit var viewModel:DetailKolamViewModel
+    private lateinit var vMKolam:KolamListViewModel
+    private var role:String =""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,10 +41,59 @@ class RincianKolamFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
+        vMKolam = ViewModelProvider(this).get(KolamListViewModel::class.java)
         val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
         val id = sharedPreferences.getString("id", null)
 
-        viewModel = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
+        role = context?.let { Global.getRole(it) }.toString()
+        if(role == Role.Admin.name){
+            b.btnEditKolamRincian.visibility = View.VISIBLE
+            b.btnHapusKolam.visibility = View.VISIBLE
+            b.switchStatusKolam.visibility = View.VISIBLE
+        }else{
+            b.btnEditKolamRincian.visibility = View.GONE
+            b.btnHapusKolam.visibility = View.GONE
+            b.switchStatusKolam.visibility = View.GONE
+        }
+
+        b.switchStatusKolam.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                vMKolam.updateStatus(0,id.toString())
+            } else {
+                vMKolam.updateStatus(1,id.toString())
+            }
+        }
+
+        b.btnEditKolamRincian.setOnClickListener {
+            val action = RincianKolamFragmentDirections.actionKolamEditFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
+
+        b.btnHapusKolam.setOnClickListener {
+            AlertDialog.Builder(context).apply {
+                val title = SpannableString("Peringatan")
+                title.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length, 0)
+                val message = SpannableString("Anda yakin ingin menghapus data kolam?")
+                message.setSpan(
+                    AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                    0,
+                    message.length,
+                    0
+                )
+                setTitle(title)
+                setMessage(message)
+                setPositiveButton("Ya"){ dialog,_->
+                    vMKolam.removeKolam(id.toString())
+                    val intent = Intent(context,AdminMainActivity::class.java)
+                    startActivity(intent)
+                }
+                setNegativeButton("Tidak"){ dialog,_->
+                    dialog.dismiss()
+                }
+                create().show()
+            }
+        }
         viewModel.fetchData(id.toString())
 
         observeView()
