@@ -107,7 +107,7 @@ class PasswordEditFragment : Fragment() {
                 }
             }else{
                 AlertDialog.Builder(context).apply {
-                    val message = SpannableString("Gagal Melakukan Registrasi")
+                    val message = SpannableString("Gagal Mengubah Kata Sandi")
                     message.setSpan(
                         AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
                         0,
