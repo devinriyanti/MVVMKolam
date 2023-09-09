@@ -37,7 +37,7 @@ class PembelianListAdapter(val transactionList:ArrayList<Transaction>):RecyclerV
             recViewPembelianItem.layoutManager = LinearLayoutManager(root.context)
             recViewPembelianItem.adapter = pembelianItemAdapter
             pembelianItemAdapter.updateTransactionItem(transaksi.produk)
-            cardViewPembelian.setOnClickListener {
+            btnPembelianDetail.setOnClickListener {
                 val sharedPreferences = holder.itemView.context.getSharedPreferences("idtransaksi", Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
                 editor.putString("status", transaksi.status.toString())

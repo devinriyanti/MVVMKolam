@@ -18,6 +18,7 @@ class KolamDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityKolamDetailBinding.inflate(layoutInflater)
         setContentView(b.root)
+        supportActionBar?.title = "Kolam Renang"
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostDetail) as NavHostFragment
         navController = navHostFragment.findNavController()
         NavigationUI.setupActionBarWithNavController(this, navController)

@@ -99,16 +99,28 @@ class PembelianDetailFragment : Fragment() {
             }
         }
 
+        if(status == StatusTransaksi.Diproses.name){
+            b.txtStatusPengiriman.text = "Pesanan diproses"
+        }else if(status == StatusTransaksi.Dikirim.name){
+            b.txtStatusPengiriman.text = "Pesanan dikirim"
+        }else if(status == StatusTransaksi.Diterima.name){
+            b.txtStatusPengiriman.text = "Pesanan diterima"
+        }else{
+            b.txtStatusPengiriman.text = "Pesanan dibatalkan"
+        }
+
         b.btnBatalkanPesanan.setOnClickListener {
             vMTransaksi.updateStatus(idtrx,StatusTransaksi.Dibatalkan.name)
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
         }
+
         b.btnPesananDiterima.setOnClickListener {
             vMTransaksi.updateStatus(idtrx,StatusTransaksi.Diterima.name)
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
         }
+
         b.btnBelanjaLagi.setOnClickListener {
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)

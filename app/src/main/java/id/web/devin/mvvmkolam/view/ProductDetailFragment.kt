@@ -25,11 +25,14 @@ import id.web.devin.mvvmkolam.util.Global
 import id.web.devin.mvvmkolam.util.formatCurrency
 import id.web.devin.mvvmkolam.util.loadImage
 import id.web.devin.mvvmkolam.viewmodel.CartViewModel
+import id.web.devin.mvvmkolam.viewmodel.DetailKolamViewModel
+import id.web.devin.mvvmkolam.viewmodel.KolamListViewModel
 import id.web.devin.mvvmkolam.viewmodel.ProductListViewModel
 
 class ProductDetailFragment : Fragment() {
     private lateinit var viewModel:ProductListViewModel
-    private lateinit var b:FragmentProductDetailBinding
+    private lateinit var vMKolam: DetailKolamViewModel
+    private lateinit var b: FragmentProductDetailBinding
     private var idKolam:String? = null
     private var qty:Int? = 0
     private var total:Double? = null
@@ -49,11 +52,15 @@ class ProductDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this).get(ProductListViewModel::class.java)
+        vMKolam = ViewModelProvider(this).get(DetailKolamViewModel::class.java)
+        val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
+        val id = sharedPreferences.getString("id", null)
+        vMKolam.fetchData(id.toString())
         email = context?.let { Global.getEmail(it) }.toString()
         role = context?.let { Global.getRole(it) }.toString()
         if(arguments != null){
             produkID = ProductDetailFragmentArgs.fromBundle(requireArguments()).produkID
-            viewModel = ViewModelProvider(this).get(ProductListViewModel::class.java)
             viewModel.refresh(produkID.toString())
             observeModel()
 
@@ -62,37 +69,28 @@ class ProductDetailFragment : Fragment() {
                 Navigation.findNavController(it).navigate(action)
             }
 
-            b.btnHapusProdukDetail.setOnClickListener {
-                AlertDialog.Builder(context).apply {
-                    val title = SpannableString("Peringatan")
-                    title.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length, 0)
-                    val message = SpannableString("Anda yakin ingin menghapus data produk?")
-                    message.setSpan(
-                        AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                        0,
-                        message.length,
-                        0
-                    )
-                    setTitle(title)
-                    setMessage(message)
-                    setPositiveButton("Ya"){ dialog,_->
-                        viewModel.removeProduk(produkID.toString())
-                        val action = ProductDetailFragmentDirections.actionProdukDetailToDetailKolamFragment()
-                        findNavController().navigate(action)
-                    }
-                    setNegativeButton("Tidak"){ dialog,_->
-                        dialog.dismiss()
-                    }
-                    create().show()
+            b.switchArsipProduk.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    viewModel.updateStatus(1,produkID.toString())
+                } else {
+                    viewModel.updateStatus(0,produkID.toString())
                 }
             }
         }
     }
 
     private fun observeModel() {
+        vMKolam.kolamLD.observe(viewLifecycleOwner, Observer {
+            if(it.is_maintenance.equals("1")){
+                b.btnTambahKeranjang.visibility = View.GONE
+            }else{
+                b.btnTambahKeranjang.visibility = View.VISIBLE
+            }
+        })
         viewModel.produkLD.observe(viewLifecycleOwner, Observer {
             val produk = viewModel.produkLD.value
             produk?.let { it->
+                b.switchArsipProduk.isChecked = it.status.equals("1")
                 b.txtNamaProductDetail.text = it.nama
                 val harga = it.harga?.let { it -> formatCurrency(it) }
                 val diskon = it.diskon
@@ -116,17 +114,23 @@ class ProductDetailFragment : Fragment() {
                 if(role == Role.Admin.toString()){
                     b.btnTambahKeranjang.visibility = View.GONE
                     b.btnEditProdukDetail.visibility = View.VISIBLE
-                    b.btnHapusProdukDetail.visibility = View.VISIBLE
+                    b.switchArsipProduk.visibility = View.VISIBLE
                 }else{
                     b.btnTambahKeranjang.visibility = View.VISIBLE
-                    b.btnTambahKeranjang.setOnClickListener {
-                        qty = qty!! + 1 // salah, contoh aja
-                        total = qty!! * (harga2!!-(harga2 * diskon!!/100))
-                        cartViewModel.addToCart(idKolam!!, total!!,email!!, idproduk!!, qty!!, harga2, diskon)
-                        Toast.makeText(context,"Berhasil Ditambahkan $qty", Toast.LENGTH_SHORT).show()
+                    b.switchArsipProduk.visibility = View.GONE
+                    if(it.qty != 0){
+                        b.btnTambahKeranjang.setOnClickListener {
+                            qty = qty!! + 1 // salah, contoh aja
+                            total = qty!! * (harga2!!-(harga2 * diskon!!/100))
+                            cartViewModel.addToCart(idKolam!!, total!!,email!!, idproduk!!, qty!!, harga2, diskon)
+                            Toast.makeText(context,"Berhasil Ditambahkan", Toast.LENGTH_SHORT).show()
+                        }
+                    }else{
+                        b.btnTambahKeranjang.setOnClickListener {
+                            Toast.makeText(context,"Produk Habis Terjual", Toast.LENGTH_SHORT).show()
+                        }
                     }
                     b.btnEditProdukDetail.visibility = View.GONE
-                    b.btnHapusProdukDetail.visibility = View.GONE
                 }
             }
         })

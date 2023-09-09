@@ -13,13 +13,11 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.FragmentProductEditBinding
-import id.web.devin.mvvmkolam.util.formatDate2
 import id.web.devin.mvvmkolam.viewmodel.ProductListViewModel
 
 class ProductEditFragment : Fragment() {
-    private lateinit var b:FragmentProductEditBinding
+    private lateinit var b: FragmentProductEditBinding
     private lateinit var vMProduk:ProductListViewModel
     private var nama:String = ""
     private var qty:Int = 0

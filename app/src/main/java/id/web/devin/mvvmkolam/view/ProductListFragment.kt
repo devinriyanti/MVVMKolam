@@ -22,7 +22,7 @@ import id.web.devin.mvvmkolam.viewmodel.ProductListViewModel
 
 class ProductListFragment : Fragment() {
     private lateinit var viewModel: DetailKolamViewModel
-    private val productListAdapter = ProductListAdapter(arrayListOf())
+    private lateinit var productListAdapter :ProductListAdapter
     private lateinit var b: FragmentProductListBinding
 //    private lateinit var navController: NavController
 
@@ -38,6 +38,7 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val role = context?.let { Global.getRole(it) }
+        productListAdapter = ProductListAdapter(requireContext(),arrayListOf())
         b.txtErorProduk.visibility = View.GONE
         val sharedPreferences = requireActivity().getSharedPreferences("kolam", Context.MODE_PRIVATE)
         val id = sharedPreferences.getString("id", null)

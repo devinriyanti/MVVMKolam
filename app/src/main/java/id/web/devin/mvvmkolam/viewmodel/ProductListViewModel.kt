@@ -130,7 +130,36 @@ class ProductListViewModel(application: Application):AndroidViewModel(applicatio
         stringReq.tag = TAG
         queue?.add(stringReq)
     }
-
+    fun updateStatus(status:Int, idproduk: String){
+        queue = Volley.newRequestQueue(getApplication())
+        val url = "https://lokowai.shop/updatestatusproduk.php"
+        val stringReq = object  : StringRequest(Method.POST, url,
+            Response.Listener {
+                val data = JSONObject(it)
+                Log.d("statusProduk", data.toString())
+                val status = data.getString("result")
+                if(status.equals("success")){
+                    statusLD.value = true
+                    Log.d("showSuccess",it.toString())
+                }else{
+                    statusLD.value = false
+                    Log.d("showError",it.toString())
+                }
+            },
+            Response.ErrorListener {
+                Toast.makeText(getApplication(),"Kesalahan Saat Mengakses Basis Data",Toast.LENGTH_SHORT).show()
+                Log.d("updateError", it.toString())
+            }){
+            override fun getParams(): MutableMap<String, String>? {
+                val params = HashMap<String, String>()
+                params["status"] = status.toString()
+                params["idproduk"] = idproduk
+                return params
+            }
+        }
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
     fun removeProduk(idproduk:String){
         queue = Volley.newRequestQueue(getApplication())
         val url = "https://lokowai.shop/removeproduk.php"

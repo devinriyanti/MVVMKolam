@@ -18,6 +18,7 @@ class CheckoutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(b.root)
+        supportActionBar?.title = "Checkout"
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostCheckout) as NavHostFragment
         navController = navHostFragment.findNavController()
         NavigationUI.setupActionBarWithNavController(this, navController)

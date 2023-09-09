@@ -33,6 +33,7 @@ class TransactionViewModel(application: Application):AndroidViewModel(applicatio
         idkota:Int,
         alamat:String
     ){
+        statusLD.value = true
         queue = Volley.newRequestQueue(getApplication())
         val url = "https://lokowai.shop/transaksi.php"
         val stringReq = object :StringRequest(Method.POST, url,
@@ -41,7 +42,7 @@ class TransactionViewModel(application: Application):AndroidViewModel(applicatio
             var data = JSONObject(response)
             var status = data.getString(("result"))
             if(status.equals("success")){
-                statusLD.value = true
+                statusLD.value = false
                 Log.d("transaksiVolley",status.toString())
             }else{
                 Log.d("transaksiError",response.toString())

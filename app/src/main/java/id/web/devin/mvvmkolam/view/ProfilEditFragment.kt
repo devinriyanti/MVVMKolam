@@ -69,7 +69,7 @@ class ProfilEditFragment : Fragment() {
         viewModel.fetchProfil(email)
         observeView()
 
-        b.editTextTglLahirProfil.setOnClickListener {
+        b.txtTglLahirProfil.setOnClickListener {
             val today = Calendar.getInstance()
             val year = today.get(Calendar.YEAR)
             val month = today.get(Calendar.MONTH)
@@ -84,7 +84,7 @@ class ProfilEditFragment : Fragment() {
 
                         var dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale("id", "ID"))
                         var str = dateFormat.format(calender.time)
-                        b.editTextTglLahirProfil.setText(str)
+                        b.txtTglLahirProfil.setText(str)
                     }, year, month, day)
             }
             picker?.show()
@@ -115,11 +115,11 @@ class ProfilEditFragment : Fragment() {
         }
 
         b.btnSimpanProfil.setOnClickListener {""
-            nama = b.editTextNamaProfil.text.toString()
-            noTelp = b.editTextTeleponProfil.text.toString()
-            alamat = b.editTextAlamatProfil.text.toString()
+            nama = b.txtNamaProfil.text.toString()
+            noTelp = b.txtTeleponProfil.text.toString()
+            alamat = b.txtAlamatProfil.text.toString()
             Log.d("gender",gender)
-            tglLahir = formatDate2(b.editTextTglLahirProfil.text.toString())
+            tglLahir = formatDate2(b.txtTglLahirProfil.text.toString())
             viewModel.updateUser(email,nama,alamat,noTelp,gender,tglLahir)
             updateUser()
         }
@@ -165,30 +165,30 @@ class ProfilEditFragment : Fragment() {
         viewModel.userLD.observe(viewLifecycleOwner, Observer {
             //Nama
             if(!it.nama.isNullOrEmpty()){
-                b.editTextNamaProfil.setText(it.nama)
+                b.txtNamaProfil.setText(it.nama)
             }else{
-                b.editTextNamaProfil.setHint("Belum Diatur")
+                b.txtNamaProfil.setHint("Belum Diatur")
             }
 
             //Email
             if(!it.email.isNullOrEmpty()){
-                b.editTextEmailProfil.setText(it.email)
+                b.txtEmailProfil.setText(it.email)
             }else{
-                b.editTextEmailProfil.setHint("Belum Diatur")
+                b.txtEmailProfil.setHint("Belum Diatur")
             }
 
             //Telepon
             if(!it.telepon.isNullOrEmpty()){
-                b.editTextTeleponProfil.setText(it.telepon)
+                b.txtTeleponProfil.setText(it.telepon)
             }else{
-                b.editTextTeleponProfil.setHint("Belum Diatur")
+                b.txtTeleponProfil.setHint("Belum Diatur")
             }
 
             //Alamat
             if(!it.alamat.isNullOrEmpty()){
-                b.editTextAlamatProfil.setText(it.alamat)
+                b.txtAlamatProfil.setText(it.alamat)
             }else{
-                b.editTextAlamatProfil.setHint("Belum Diatur")
+                b.txtAlamatProfil.setHint("Belum Diatur")
             }
 //            val k = it.jenis_kelamin.displayText
             //Jenis Kelamin
@@ -206,9 +206,9 @@ class ProfilEditFragment : Fragment() {
             //Tanggal Lahir
             if(!it.tglLahir.isNullOrEmpty()){
                 val tgl = formatDate(it.tglLahir.toString())
-                b.editTextTglLahirProfil.setText(tgl)
+                b.txtTglLahirProfil.setText(tgl)
             }else{
-                b.editTextTglLahirProfil.setHint("Belum Diatur")
+                b.txtTglLahirProfil.setHint("Belum Diatur")
             }
         })
     }

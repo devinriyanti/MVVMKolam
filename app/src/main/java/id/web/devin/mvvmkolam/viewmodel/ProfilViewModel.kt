@@ -90,6 +90,38 @@ class ProfilViewModel(application: Application):AndroidViewModel(application) {
         queue?.add(stringReq)
     }
 
+    fun updateKatasandi(email:String,pwd: String){
+        queue = Volley.newRequestQueue(getApplication())
+        val url = "https://lokowai.shop/updatepassword.php"
+        val stringReq = object : StringRequest(
+            Method.POST, url,
+            Response.Listener{ response ->
+                val data = JSONObject(response)
+                Log.d("update", data.toString())
+                val status = data.getString("result")
+                if(status.equals("success")){
+                    statusLD.value = true
+                    Log.d("showSuccess",response.toString())
+                }else{
+                    statusLD.value = false
+                    Log.d("showError",response.toString())
+                }
+            },
+            {
+                Toast.makeText(getApplication(),"Kesalahan Saat Mengakses Basis Data", Toast.LENGTH_SHORT).show()
+                Log.d("updateError", it.toString())
+            }){
+            override fun getParams(): MutableMap<String, String> {
+                val params = HashMap<String, String>()
+                params["email"] = email
+                params["pwd"] = pwd
+                return params
+            }
+        }
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
+
     override fun onCleared() {
         super.onCleared()
         queue?.cancelAll(TAG)

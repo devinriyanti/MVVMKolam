@@ -51,6 +51,8 @@ class PelatihListFragment : Fragment() {
                 val action = KolamDetailFragmentDirections.actionPelatihAddFragment()
                 Navigation.findNavController(it).navigate(action)
             }
+        }else{
+            b.fabTambahPelatih.visibility = View.GONE
         }
         b.refreshLayoutPelatih.setOnRefreshListener {
             b.recViewPelatih.visibility = View.GONE

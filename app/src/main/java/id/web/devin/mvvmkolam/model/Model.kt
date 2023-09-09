@@ -27,7 +27,7 @@ data class Pelatih(
     val tglKarir:String?,
     val deskripsi:String?,
     val jenis_kelamin: String?,
-    @SerializedName("gambar")
+    @SerializedName("url_gambar")
     val gambarUrl: String?
 )
 
@@ -42,24 +42,10 @@ data class Produk(
     var qty: Int?,
     val harga:Double?,
     val diskon:Double?,
-    @SerializedName("gambar")
+    @SerializedName("url_gambar")
     val gambarUrl: String?,
-    val berat:Double?
-)
-
-data class Tiket(
-    val idproduk:String?,
-    val idkolam:String?,
-    val nama:String?,
-    val kota: String?,
-    val deskripsi: String?,
-    @SerializedName("kuantitas")
-    val qty: Double?,
-    val harga:Double?,
-    val diskon:Double?,
-    @SerializedName("gambar")
-    val gambarUrl: String?,
-    val berat:Double?
+    val berat:Int?,
+    val status:String?
 )
 
 data class Kolam(
@@ -67,16 +53,17 @@ data class Kolam(
     val nama: String?,
     val alamat: String?,
     val deskripsi: String?,
-    @SerializedName("gambar")
+    @SerializedName("url_gambar")
     val gambarUrl: String?,
     val is_maintenance: String?,
+    val status:String?,
     val kota: String?,
+    @SerializedName("url_lokasi")
     val lokasi:String?,
     @SerializedName("email_pengguna")
     val admin: String?,
     @SerializedName("product")
     val produk:ArrayList<Produk>,
-    val tiket:ArrayList<Tiket>,
     val pelatih:ArrayList<Pelatih>
 )
 
@@ -132,8 +119,9 @@ data class ProductTransaction(
     val nama: String,
     val qty: Int,
     val harga: Double,
-    val diskon: Double,
-    val berat: Double,
+    val diskon: Int,
+    val berat: Int,
+    @SerializedName("url_gambar")
     val gambar: String
 )
 
@@ -157,8 +145,9 @@ data class ProdukCart(
     val harga:Double,
     val qty: Int,
     val diskon: Double,
+    @SerializedName("url_gambar")
     val gambar:String,
-    val berat:Double,
+    val berat:Int,
     val norekening:String
 )
 

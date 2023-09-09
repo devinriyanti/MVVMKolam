@@ -50,11 +50,6 @@ class HomeListFragment : Fragment() {
                 viewModel.refreshAdmin(email,it.role.toString())
                 b.txtPencarianKolamHome.visibility = View.GONE
                 b.fabTambahKolam.visibility = View.VISIBLE
-
-                b.fabTambahKolam.setOnClickListener {
-                    val action = HomeListFragmentDirections.actionToKolamAddFragment()
-                    Navigation.findNavController(it).navigate(action)
-                }
             }else{
                 b.txtPencarianKolam.addTextChangedListener {
                     cari = b.txtPencarianKolam.text.toString()
@@ -65,7 +60,7 @@ class HomeListFragment : Fragment() {
                     }
                     viewModel.refresh(cari)
                 }
-                viewModel.refresh(cari)
+                viewModel.refresh("")
                 b.fabTambahKolam.visibility = View.GONE
             }
 
@@ -78,7 +73,7 @@ class HomeListFragment : Fragment() {
                 b.txtError.visibility = View.GONE
                 b.txtKolamTersedia.visibility = View.GONE
                 b.progressLoad.visibility = View.VISIBLE
-                var cari = ""
+
                 if (it.role == Role.Admin){
                     viewModel.refreshAdmin(email,it.role.toString())
                     b.txtPencarianKolamHome.visibility = View.GONE
@@ -90,7 +85,7 @@ class HomeListFragment : Fragment() {
                         }else{
                             cari = ""
                         }
-                        viewModel.refresh(cari)
+                        viewModel.refresh("")
                     }
                     viewModel.refresh(cari)
                 }
@@ -102,8 +97,17 @@ class HomeListFragment : Fragment() {
             if(!it.isNullOrEmpty()){
                 kolamListAdapter.updateKolamList(it)
                 b.txtKolamTersedia.text = ""
+                if(it.size >= 1){
+                    b.fabTambahKolam.isEnabled = false
+                }else{
+                    b.fabTambahKolam.setOnClickListener {
+                        val action = HomeListFragmentDirections.actionToKolamAddFragment()
+                        Navigation.findNavController(it).navigate(action)
+                    }
+                }
             }else{
-               b.txtKolamTersedia.text = "Tidak Ada Kolam"
+                kolamListAdapter.updateKolamList(emptyList())
+                b.txtKolamTersedia.text = "Tidak Ada Kolam"
             }
         })
 

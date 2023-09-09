@@ -18,6 +18,7 @@ class PembelianDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityPembelianDetailBinding.inflate(layoutInflater)
         setContentView(b.root)
+        supportActionBar?.title = "Transaksi"
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostPembelianDetail) as NavHostFragment
         navController = navHostFragment.findNavController()
         NavigationUI.setupActionBarWithNavController(this, navController)

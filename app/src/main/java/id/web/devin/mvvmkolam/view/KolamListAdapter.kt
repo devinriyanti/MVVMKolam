@@ -47,7 +47,7 @@ class KolamListAdapter(private val context: Context,val kolamList:ArrayList<Kola
             txtAlamatKolam.text = kolam.alamat
             imageKolam.loadImage(kolam.gambarUrl.toString(), progressBar)
 
-            if(kolam.is_maintenance.equals("0")){
+            if(kolam.is_maintenance.equals("0") && kolam.status.equals("0")){
                 txtStatus.setText("Buka")
                 txtStatus.setTextColor(Color.GREEN)
                 cardListKolam.setOnClickListener {
@@ -58,8 +58,22 @@ class KolamListAdapter(private val context: Context,val kolamList:ArrayList<Kola
                     editor.putString("id", kolam.id.toString())
                     editor.apply()
                 }
-            }else{
+            }else if(kolam.is_maintenance.equals("1") && kolam.status.equals("0")){
                 txtStatus.setText("Tutup")
+                txtStatus.setTextColor(Color.RED)
+                imageKolam.colorFilter= colorFilter
+                cardListKolam.setOnClickListener {
+                    var intent = Intent(holder.itemView.context, KolamDetailActivity::class.java)
+                    holder.itemView.context.startActivity(intent)
+                    val sharedPreferences = context.getSharedPreferences("kolam", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("id", kolam.id.toString())
+                    editor.apply()
+                }
+            }
+
+            if(kolam.status.equals("1") && kolam.is_maintenance.equals("1") || kolam.status.equals("1") && kolam.is_maintenance.equals("0")){
+                txtStatus.setText("Tutup Permanen")
                 txtStatus.setTextColor(Color.RED)
                 imageKolam.colorFilter= colorFilter
                 val role = Global.getRole(context)

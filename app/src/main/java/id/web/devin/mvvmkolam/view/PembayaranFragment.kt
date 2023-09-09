@@ -230,6 +230,7 @@ class PembayaranFragment : Fragment() {
                         val url = "https://lokowai.shop/image/bukti/B${trx.id}.jpg"
                         val folderValue = "bukti"
                         val folderRequestBody = RequestBody.create("text/plain".toMediaTypeOrNull(), folderValue)
+                        b.txtNamaBukti.text = "B${trx.id}.jpg"
                         vMUpload.uploadImage(imagePart,folderRequestBody)
                         vMTransaksi.updateBuktiPembayaran(url,trx.id)
                     }

@@ -31,7 +31,7 @@ class DaftarSebagaiFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         b.btnAkunPribadi.setOnClickListener {
-            val action = DaftarSebagaiFragmentDirections.actionPilihKotaFragment()
+            val action = DaftarSebagaiFragmentDirections.actionRegisPFragment()
             Navigation.findNavController(it).navigate(action)
         }
         b.btnAkunBisnis.setOnClickListener {

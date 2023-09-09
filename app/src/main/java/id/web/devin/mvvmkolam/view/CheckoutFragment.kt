@@ -1,7 +1,12 @@
 package id.web.devin.mvvmkolam.view
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.text.Layout
+import android.text.SpannableString
+import android.text.style.AlignmentSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,10 +15,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import id.web.devin.mvvmkolam.R
 import id.web.devin.mvvmkolam.databinding.FragmentCheckoutBinding
+import id.web.devin.mvvmkolam.model.Role
 import id.web.devin.mvvmkolam.util.Global
 import id.web.devin.mvvmkolam.util.formatCurrency
 import id.web.devin.mvvmkolam.viewmodel.CartViewModel
@@ -123,6 +130,7 @@ class CheckoutFragment : Fragment() {
             }
             vMShipping.fetchShippingCosts(asal,tujuan,totalBerat)
         })
+
         vMShipping.loadingLD.observe(viewLifecycleOwner, Observer {
             if(it == true){
                 b.progressCheckout.visibility = View.VISIBLE
@@ -140,6 +148,25 @@ class CheckoutFragment : Fragment() {
                 b.cardPembayaran.visibility = View.VISIBLE
             }
         })
+        vMTransaksi.statusLD.observe(viewLifecycleOwner, Observer {
+            if(it == false){
+                AlertDialog.Builder(context).apply {
+                    val message = SpannableString("Pesanan Berhasil Dibuat")
+                    message.setSpan(
+                        AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                        0,
+                        message.length,
+                        0
+                    )
+                    setMessage(message)
+                    setPositiveButton("OK") { _, _ ->
+                        val action = CheckoutFragmentDirections.actionToPembayaranFragment()
+                        findNavController().navigate(action)
+                    }
+                    create().show()
+                }
+            }
+        })
     }
 
     private fun updateTotal() {
@@ -150,10 +177,7 @@ class CheckoutFragment : Fragment() {
         editor!!.apply()
         b.txtTotalPembayaranCO.text = formatCurrency(total.toDouble())
         b.btnBuatPesananCO.setOnClickListener {
-            Log.d("idkolam",idKolam)
             vMTransaksi.insertTransaksi(pengiriman, idkeranjang, idKolam, email, tujuan.toInt(), alamat)
-            val action = CheckoutFragmentDirections.actionToPembayaranFragment()
-            Navigation.findNavController(it).navigate(action)
         }
     }
 }

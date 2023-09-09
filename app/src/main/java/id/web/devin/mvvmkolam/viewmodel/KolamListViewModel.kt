@@ -37,7 +37,11 @@ class KolamListViewModel(application: Application):AndroidViewModel(application)
         val stringReq = StringRequest(Request.Method.GET, url,
             { response->
                 val sType = object : TypeToken<List<Kolam>>(){ }.type
-                val result = Gson().fromJson<List<Kolam>>(response, sType)
+                if(response.contains("error")){
+                    result = emptyList()
+                }else{
+                    result = Gson().fromJson<List<Kolam>>(response, sType)
+                }
                 kolamLD.value = result
 
                 loadingLD.value = false
@@ -191,6 +195,36 @@ class KolamListViewModel(application: Application):AndroidViewModel(application)
         queue?.add(stringReq)
     }
 
+    fun updateMaintenance(status:Int, idkolam: String){
+        queue = Volley.newRequestQueue(getApplication())
+        val url = "https://lokowai.shop/updatestatusmaintenance.php"
+        val stringReq = object  : StringRequest(Method.POST, url,
+            Response.Listener {
+                val data = JSONObject(it)
+                Log.d("statusKolam", data.toString())
+                val status = data.getString("result")
+                if(status.equals("success")){
+                    statusLD.value = true
+                    Log.d("showSuccess",it.toString())
+                }else{
+                    statusLD.value = false
+                    Log.d("showError",it.toString())
+                }
+            },
+            Response.ErrorListener {
+                Toast.makeText(getApplication(),"Kesalahan Saat Mengakses Basis Data",Toast.LENGTH_SHORT).show()
+                Log.d("updateError", it.toString())
+            }){
+            override fun getParams(): MutableMap<String, String>? {
+                val params = HashMap<String, String>()
+                params["status"] = status.toString()
+                params["idkolam"] = idkolam
+                return params
+            }
+        }
+        stringReq.tag = TAG
+        queue?.add(stringReq)
+    }
     fun updateStatus(status:Int, idkolam: String){
         queue = Volley.newRequestQueue(getApplication())
         val url = "https://lokowai.shop/updatestatuskolam.php"

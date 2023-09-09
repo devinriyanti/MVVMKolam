@@ -24,6 +24,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
+                <Spinner
+                    android:id="@+id/spinnerProvinsi"
+                    style="@android:style/Widget.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:minHeight="60dp"
+                    app:layout_constraintEnd_toEndOf="@+id/textInputLayout23"
+                    app:layout_constraintStart_toStartOf="@+id/textInputLayout23"
+                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout23"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <Spinner
+                    android:id="@+id/spinnerKota"
+                    style="@android:style/Widget.Spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:minHeight="60dp"
+                    app:layout_constraintEnd_toEndOf="@+id/spinnerProvinsi"
+                    app:layout_constraintStart_toStartOf="@+id/spinnerProvinsi"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerProvinsi"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
                 <TextView
                     android:id="@+id/textView6"
                     android:layout_width="wrap_content"
@@ -138,9 +162,9 @@
                     app:boxCornerRadiusTopStart="8dp"
                     app:hintAnimationEnabled="true"
                     app:hintEnabled="true"
-                    app:layout_constraintEnd_toEndOf="@+id/textInputLayout23"
-                    app:layout_constraintStart_toStartOf="@+id/textInputLayout23"
-                    app:layout_constraintTop_toBottomOf="@+id/textInputLayout23">
+                    app:layout_constraintEnd_toEndOf="@+id/spinnerKota"
+                    app:layout_constraintStart_toStartOf="@+id/spinnerKota"
+                    app:layout_constraintTop_toBottomOf="@+id/spinnerKota">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtNoTeleponPribadi"
@@ -221,7 +245,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/txtAlamatPribadi"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/baseline_home_24" />
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>

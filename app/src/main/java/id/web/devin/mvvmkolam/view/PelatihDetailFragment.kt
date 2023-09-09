@@ -71,7 +71,7 @@ class PelatihDetailFragment : Fragment() {
                     setTitle(title)
                     setMessage(message)
                     setPositiveButton("Ya"){ dialog,_->
-                        viewModel.removeKolam(pelatihID)
+                        viewModel.removeKolam(pelatihID )
                         val action = PelatihDetailFragmentDirections.actionDetailPelatihToDetailKolamFragment()
                         findNavController().navigate(action)
                     }
