@@ -42,6 +42,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        b.progressBarLogin.visibility = View.GONE
         var role = Global.getRole(requireContext())
         if(context?.let { Global.getEmail(it) } != null){
             if(role == "Admin"){
@@ -55,6 +56,7 @@ class LoginFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(AuthViewModel::class.java)
         vmProfil = ViewModelProvider(this).get(ProfilViewModel::class.java)
         b.btnLogin.setOnClickListener {
+            b.progressBarLogin.visibility = View.VISIBLE
             email = b.editTextEmailLogin.text.toString()
             pwd = b.editTextPwdLogin.text.toString()
             encryptPwd = EncryptionUtils.encrypt(pwd)
@@ -90,6 +92,7 @@ class LoginFragment : Fragment() {
     private fun observeView() {
         viewModel.statusLD.observe(viewLifecycleOwner, Observer{
             if(it == true){
+                b.progressBarLogin.visibility = View.GONE
                 vmProfil.userLD.observe(viewLifecycleOwner, Observer {
                     val role = it.role
                     AlertDialog.Builder(context).apply {
