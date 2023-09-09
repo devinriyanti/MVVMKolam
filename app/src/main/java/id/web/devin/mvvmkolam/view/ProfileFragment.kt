@@ -75,6 +75,10 @@ class ProfileFragment : Fragment() {
                 create().show()
             }
         }
+        b.btnUbahPwd.setOnClickListener {
+            val action = ProfileFragmentDirections.actionPasswordEditFragment()
+            Navigation.findNavController(it).navigate(action)
+        }
     }
 
     private fun observeView() {

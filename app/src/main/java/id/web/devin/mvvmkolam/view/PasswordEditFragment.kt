@@ -40,22 +40,40 @@ class PasswordEditFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         vMProfil = ViewModelProvider(this).get(ProfilViewModel::class.java)
         val email = context?.let { Global.getEmail(it) }
-        pwd = b.txtEditKataSandi.text.toString()
-        newPwd = b.txtEditKonfirmasiKataSandi.text.toString()
         val encryptPwd = EncryptionUtils.encrypt(pwd)
-        if(pwd.isNotEmpty() && newPwd.isNotEmpty()){
-            if (pwd.equals(newPwd)){
-                if(pwd.length >= 4 && pwd.length <=8){
-                    vMProfil.updateKatasandi(email.toString(),encryptPwd)
-                    observeView()
+        b.btnSimpanEditPwd.setOnClickListener {
+            pwd = b.txtEditKataSandi.text.toString()
+            newPwd = b.txtEditKonfirmasiKataSandi.text.toString()
+            if(pwd.isNotEmpty() && newPwd.isNotEmpty()){
+                if (pwd.equals(newPwd)){
+                    if(pwd.length >= 4 && pwd.length <=8){
+                        vMProfil.updateKatasandi(email.toString(),encryptPwd)
+                        observeView()
+                    }else{
+                        Toast.makeText(context, "Kata Sandi Harus Menggunakan 4-8 Karakter!", Toast.LENGTH_SHORT).show()
+                    }
                 }else{
-                    Toast.makeText(context, "Kata Sandi Harus Menggunakan 4-8 Karakter!", Toast.LENGTH_SHORT).show()
+                    AlertDialog.Builder(context).apply {
+                        val title = SpannableString("Peringatan")
+                        title.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length, 0)
+                        val message = SpannableString("Kata Sandi Tidak Cocok Dengan Konfimasi Kata Sandi")
+                        message.setSpan(
+                            AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
+                            0,
+                            message.length,
+                            0
+                        )
+                        setTitle(title)
+                        setMessage(message)
+                        setPositiveButton("OK", null)
+                        create().show()
+                    }
                 }
             }else{
                 AlertDialog.Builder(context).apply {
                     val title = SpannableString("Peringatan")
                     title.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length, 0)
-                    val message = SpannableString("Kata Sandi Tidak Cocok Dengan Konfimasi Kata Sandi")
+                    val message = SpannableString("Data Tidak Boleh Kosong")
                     message.setSpan(
                         AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
                         0,
@@ -67,22 +85,6 @@ class PasswordEditFragment : Fragment() {
                     setPositiveButton("OK", null)
                     create().show()
                 }
-            }
-        }else{
-            AlertDialog.Builder(context).apply {
-                val title = SpannableString("Peringatan")
-                title.setSpan(AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER), 0, title.length, 0)
-                val message = SpannableString("Data Tidak Boleh Kosong")
-                message.setSpan(
-                    AlignmentSpan.Standard(Layout.Alignment.ALIGN_CENTER),
-                    0,
-                    message.length,
-                    0
-                )
-                setTitle(title)
-                setMessage(message)
-                setPositiveButton("OK", null)
-                create().show()
             }
         }
     }
